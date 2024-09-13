@@ -1,0 +1,225 @@
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccyugF2g.s 			page 1
+
+
+   1              		.cpu cortex-m33
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"secure_nsc.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.SECURE_RegisterCallback,"ax",%progbits
+  18              		.align	1
+  19              		.global	SECURE_RegisterCallback
+  20              		.global	__acle_se_SECURE_RegisterCallback
+  21              		.arch armv8-m.main
+  22              		.arch_extension dsp
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  26              		.fpu fpv4-sp-d16
+  28              		.syntax unified
+  29              		.thumb
+  30              		.thumb_func
+  31              		.fpu fpv4-sp-d16
+  33              	SECURE_RegisterCallback:
+  34              	__acle_se_SECURE_RegisterCallback:
+  35              	.LVL0:
+  36              	.LFB1084:
+  37              		.file 1 "../../Secure/Core/Src/secure_nsc.c"
+   1:../../Secure/Core/Src/secure_nsc.c **** /* USER CODE BEGIN Header */
+   2:../../Secure/Core/Src/secure_nsc.c **** /**
+   3:../../Secure/Core/Src/secure_nsc.c ****   ******************************************************************************
+   4:../../Secure/Core/Src/secure_nsc.c ****   * @file    Secure/Src/secure_nsc.c
+   5:../../Secure/Core/Src/secure_nsc.c ****   * @author  MCD Application Team
+   6:../../Secure/Core/Src/secure_nsc.c ****   * @brief   This file contains the non-secure callable APIs (secure world)
+   7:../../Secure/Core/Src/secure_nsc.c ****   ******************************************************************************
+   8:../../Secure/Core/Src/secure_nsc.c ****     * @attention
+   9:../../Secure/Core/Src/secure_nsc.c ****   *
+  10:../../Secure/Core/Src/secure_nsc.c ****   * Copyright (c) 2024 STMicroelectronics.
+  11:../../Secure/Core/Src/secure_nsc.c ****   * All rights reserved.
+  12:../../Secure/Core/Src/secure_nsc.c ****   *
+  13:../../Secure/Core/Src/secure_nsc.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:../../Secure/Core/Src/secure_nsc.c ****   * in the root directory of this software component.
+  15:../../Secure/Core/Src/secure_nsc.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:../../Secure/Core/Src/secure_nsc.c ****   *
+  17:../../Secure/Core/Src/secure_nsc.c ****   ******************************************************************************
+  18:../../Secure/Core/Src/secure_nsc.c ****   */
+  19:../../Secure/Core/Src/secure_nsc.c **** /* USER CODE END Header */
+  20:../../Secure/Core/Src/secure_nsc.c **** 
+  21:../../Secure/Core/Src/secure_nsc.c **** /* USER CODE BEGIN Non_Secure_CallLib */
+  22:../../Secure/Core/Src/secure_nsc.c **** /* Includes ------------------------------------------------------------------*/
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccyugF2g.s 			page 2
+
+
+  23:../../Secure/Core/Src/secure_nsc.c **** #include "main.h"
+  24:../../Secure/Core/Src/secure_nsc.c **** #include "secure_nsc.h"
+  25:../../Secure/Core/Src/secure_nsc.c **** /** @addtogroup STM32L5xx_HAL_Examples
+  26:../../Secure/Core/Src/secure_nsc.c ****   * @{
+  27:../../Secure/Core/Src/secure_nsc.c ****   */
+  28:../../Secure/Core/Src/secure_nsc.c **** 
+  29:../../Secure/Core/Src/secure_nsc.c **** /** @addtogroup Templates
+  30:../../Secure/Core/Src/secure_nsc.c ****   * @{
+  31:../../Secure/Core/Src/secure_nsc.c ****   */
+  32:../../Secure/Core/Src/secure_nsc.c **** 
+  33:../../Secure/Core/Src/secure_nsc.c **** /* Global variables ----------------------------------------------------------*/
+  34:../../Secure/Core/Src/secure_nsc.c **** void *pSecureFaultCallback = NULL;   /* Pointer to secure fault callback in Non-secure */
+  35:../../Secure/Core/Src/secure_nsc.c **** void *pSecureErrorCallback = NULL;   /* Pointer to secure error callback in Non-secure */
+  36:../../Secure/Core/Src/secure_nsc.c **** 
+  37:../../Secure/Core/Src/secure_nsc.c **** /* Private typedef -----------------------------------------------------------*/
+  38:../../Secure/Core/Src/secure_nsc.c **** /* Private define ------------------------------------------------------------*/
+  39:../../Secure/Core/Src/secure_nsc.c **** /* Private macro -------------------------------------------------------------*/
+  40:../../Secure/Core/Src/secure_nsc.c **** /* Private variables ---------------------------------------------------------*/
+  41:../../Secure/Core/Src/secure_nsc.c **** /* Private function prototypes -----------------------------------------------*/
+  42:../../Secure/Core/Src/secure_nsc.c **** /* Private functions ---------------------------------------------------------*/
+  43:../../Secure/Core/Src/secure_nsc.c **** 
+  44:../../Secure/Core/Src/secure_nsc.c **** /**
+  45:../../Secure/Core/Src/secure_nsc.c ****   * @brief  Secure registration of non-secure callback.
+  46:../../Secure/Core/Src/secure_nsc.c ****   * @param  CallbackId  callback identifier
+  47:../../Secure/Core/Src/secure_nsc.c ****   * @param  func        pointer to non-secure function
+  48:../../Secure/Core/Src/secure_nsc.c ****   * @retval None
+  49:../../Secure/Core/Src/secure_nsc.c ****   */
+  50:../../Secure/Core/Src/secure_nsc.c **** CMSE_NS_ENTRY void SECURE_RegisterCallback(SECURE_CallbackIDTypeDef CallbackId, void *func)
+  51:../../Secure/Core/Src/secure_nsc.c **** {
+  38              		.loc 1 51 1 view -0
+  39              		.cfi_startproc
+  40              		@ Non-secure entry function: called from non-secure code.
+  41              		@ args = 0, pretend = 0, frame = 0
+  42              		@ frame_needed = 0, uses_anonymous_args = 0
+  43              		@ link register save eliminated.
+  52:../../Secure/Core/Src/secure_nsc.c ****   if(func != NULL)
+  44              		.loc 1 52 3 view .LVU1
+  45              		.loc 1 52 5 is_stmt 0 view .LVU2
+  46 0000 11B1     		cbz	r1, .L1
+  53:../../Secure/Core/Src/secure_nsc.c ****   {
+  54:../../Secure/Core/Src/secure_nsc.c ****     switch(CallbackId)
+  47              		.loc 1 54 5 is_stmt 1 view .LVU3
+  48 0002 A8B3     		cbz	r0, .L3
+  49 0004 0128     		cmp	r0, #1
+  50 0006 36D0     		beq	.L4
+  51              	.L1:
+  55:../../Secure/Core/Src/secure_nsc.c ****     {
+  56:../../Secure/Core/Src/secure_nsc.c ****       case SECURE_FAULT_CB_ID:           /* SecureFault Interrupt occurred */
+  57:../../Secure/Core/Src/secure_nsc.c ****         pSecureFaultCallback = func;
+  58:../../Secure/Core/Src/secure_nsc.c ****         break;
+  59:../../Secure/Core/Src/secure_nsc.c ****       case GTZC_ERROR_CB_ID:             /* GTZC Interrupt occurred */
+  60:../../Secure/Core/Src/secure_nsc.c ****         pSecureErrorCallback = func;
+  61:../../Secure/Core/Src/secure_nsc.c ****         break;
+  62:../../Secure/Core/Src/secure_nsc.c ****       default:
+  63:../../Secure/Core/Src/secure_nsc.c ****         /* unknown */
+  64:../../Secure/Core/Src/secure_nsc.c ****         break;
+  65:../../Secure/Core/Src/secure_nsc.c ****     }
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccyugF2g.s 			page 3
+
+
+  66:../../Secure/Core/Src/secure_nsc.c ****   }
+  67:../../Secure/Core/Src/secure_nsc.c **** }
+  52              		.loc 1 67 1 is_stmt 0 view .LVU4
+  53 0008 7046     		mov	r0, lr
+  54              	.LVL1:
+  55              		.loc 1 67 1 view .LVU5
+  56 000a 7146     		mov	r1, lr
+  57              	.LVL2:
+  58              		.loc 1 67 1 view .LVU6
+  59 000c 7246     		mov	r2, lr
+  60 000e 7346     		mov	r3, lr
+  61 0010 B7EE000A 		vmov.f32	s0, #1.0e+0
+  62 0014 F7EE000A 		vmov.f32	s1, #1.0e+0
+  63 0018 B7EE001A 		vmov.f32	s2, #1.0e+0
+  64 001c F7EE001A 		vmov.f32	s3, #1.0e+0
+  65 0020 B7EE002A 		vmov.f32	s4, #1.0e+0
+  66 0024 F7EE002A 		vmov.f32	s5, #1.0e+0
+  67 0028 B7EE003A 		vmov.f32	s6, #1.0e+0
+  68 002c F7EE003A 		vmov.f32	s7, #1.0e+0
+  69 0030 B7EE004A 		vmov.f32	s8, #1.0e+0
+  70 0034 F7EE004A 		vmov.f32	s9, #1.0e+0
+  71 0038 B7EE005A 		vmov.f32	s10, #1.0e+0
+  72 003c F7EE005A 		vmov.f32	s11, #1.0e+0
+  73 0040 B7EE006A 		vmov.f32	s12, #1.0e+0
+  74 0044 F7EE006A 		vmov.f32	s13, #1.0e+0
+  75 0048 B7EE007A 		vmov.f32	s14, #1.0e+0
+  76 004c F7EE007A 		vmov.f32	s15, #1.0e+0
+  77 0050 8EF3008C 		msr	APSR_nzcvqg, lr
+  78 0054 10B4     		push	{r4}
+  79 0056 F1EE10CA 		vmrs	ip, fpscr
+  80 005a 4FF66074 		movw	r4, #65376
+  81 005e C0F6FF74 		movt	r4, #4095
+  82 0062 0CEA040C 		and	ip, r4
+  83 0066 E1EE10CA 		vmsr	fpscr, ip
+  84 006a 10BC     		pop	{r4}
+  85 006c F446     		mov	ip, lr
+  86 006e 7447     		bxns	lr
+  87              	.LVL3:
+  88              	.L3:
+  57:../../Secure/Core/Src/secure_nsc.c ****         break;
+  89              		.loc 1 57 9 is_stmt 1 view .LVU7
+  57:../../Secure/Core/Src/secure_nsc.c ****         break;
+  90              		.loc 1 57 30 is_stmt 0 view .LVU8
+  91 0070 024A     		ldr	r2, .L5
+  92 0072 1160     		str	r1, [r2]
+  58:../../Secure/Core/Src/secure_nsc.c ****       case GTZC_ERROR_CB_ID:             /* GTZC Interrupt occurred */
+  93              		.loc 1 58 9 is_stmt 1 view .LVU9
+  94 0074 C8E7     		b	.L1
+  95              	.L4:
+  60:../../Secure/Core/Src/secure_nsc.c ****         break;
+  96              		.loc 1 60 9 view .LVU10
+  60:../../Secure/Core/Src/secure_nsc.c ****         break;
+  97              		.loc 1 60 30 is_stmt 0 view .LVU11
+  98 0076 024A     		ldr	r2, .L5+4
+  99 0078 1160     		str	r1, [r2]
+  61:../../Secure/Core/Src/secure_nsc.c ****       default:
+ 100              		.loc 1 61 9 is_stmt 1 view .LVU12
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccyugF2g.s 			page 4
+
+
+ 101              		.loc 1 67 1 is_stmt 0 view .LVU13
+ 102 007a C5E7     		b	.L1
+ 103              	.L6:
+ 104              		.align	2
+ 105              	.L5:
+ 106 007c 00000000 		.word	.LANCHOR0
+ 107 0080 00000000 		.word	.LANCHOR1
+ 108              		.cfi_endproc
+ 109              	.LFE1084:
+ 111              		.global	pSecureErrorCallback
+ 112              		.global	pSecureFaultCallback
+ 113              		.section	.bss.pSecureErrorCallback,"aw",%nobits
+ 114              		.align	2
+ 115              		.set	.LANCHOR1,. + 0
+ 118              	pSecureErrorCallback:
+ 119 0000 00000000 		.space	4
+ 120              		.section	.bss.pSecureFaultCallback,"aw",%nobits
+ 121              		.align	2
+ 122              		.set	.LANCHOR0,. + 0
+ 125              	pSecureFaultCallback:
+ 126 0000 00000000 		.space	4
+ 127              		.text
+ 128              	.Letext0:
+ 129              		.file 2 "c:\\opt\\toolchains\\gcc-arm-10.3-2021.07-mingw-w64-i686-arm-none-eabi\\gcc-arm-10.3-2021
+ 130              		.file 3 "c:\\opt\\toolchains\\gcc-arm-10.3-2021.07-mingw-w64-i686-arm-none-eabi\\gcc-arm-10.3-2021
+ 131              		.file 4 "../../Secure_nsclib/secure_nsc.h"
+ 132              		.file 5 "../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_dma.h"
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccyugF2g.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 secure_nsc.c
+C:\Users\carlos\AppData\Local\Temp\ccyugF2g.s:18     .text.SECURE_RegisterCallback:00000000 $t
+C:\Users\carlos\AppData\Local\Temp\ccyugF2g.s:33     .text.SECURE_RegisterCallback:00000000 SECURE_RegisterCallback
+C:\Users\carlos\AppData\Local\Temp\ccyugF2g.s:34     .text.SECURE_RegisterCallback:00000000 __acle_se_SECURE_RegisterCallback
+C:\Users\carlos\AppData\Local\Temp\ccyugF2g.s:106    .text.SECURE_RegisterCallback:0000007c $d
+C:\Users\carlos\AppData\Local\Temp\ccyugF2g.s:118    .bss.pSecureErrorCallback:00000000 pSecureErrorCallback
+C:\Users\carlos\AppData\Local\Temp\ccyugF2g.s:125    .bss.pSecureFaultCallback:00000000 pSecureFaultCallback
+C:\Users\carlos\AppData\Local\Temp\ccyugF2g.s:114    .bss.pSecureErrorCallback:00000000 $d
+C:\Users\carlos\AppData\Local\Temp\ccyugF2g.s:121    .bss.pSecureFaultCallback:00000000 $d
+
+NO UNDEFINED SYMBOLS

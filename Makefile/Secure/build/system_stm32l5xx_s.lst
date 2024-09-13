@@ -1,0 +1,1633 @@
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 1
+
+
+   1              		.cpu cortex-m33
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"system_stm32l5xx_s.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.SystemInit,"ax",%progbits
+  18              		.align	1
+  19              		.global	SystemInit
+  20              		.arch armv8-m.main
+  21              		.arch_extension dsp
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  25              		.fpu fpv4-sp-d16
+  27              	SystemInit:
+  28              	.LFB203:
+  29              		.file 1 "../../Secure/Core/Src/system_stm32l5xx_s.c"
+   1:../../Secure/Core/Src/system_stm32l5xx_s.c **** /**
+   2:../../Secure/Core/Src/system_stm32l5xx_s.c ****   ******************************************************************************
+   3:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @file    system_stm32l5xx_s.c
+   4:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @author  MCD Application Team
+   5:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @brief   CMSIS Cortex-M33 Device Peripheral Access Layer System Source File
+   6:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *          to be used in secure application when the system implements
+   7:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *          the TrustZone-M security.
+   8:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+   9:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *   This file provides two functions and one global variable to be called from
+  10:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *   user application:
+  11:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *      - SystemInit(): This function is called at secure startup just after reset
+  12:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *                      and before branch to secure main program.
+  13:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *                      This call is made inside the "startup_stm32l5xx.s" file.
+  14:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+  15:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *      - SystemCoreClock variable: Contains the core clock (HCLK), it can be used
+  16:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *                                  by the user application to setup the SysTick
+  17:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *                                  timer or configure other parameters.
+  18:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+  19:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *      - SystemCoreClockUpdate(): Updates the variable SystemCoreClock and must
+  20:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *                                 be called whenever the core clock is changed
+  21:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *                                 during program execution.
+  22:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+  23:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *      - SECURE_SystemCoreClockUpdate(): Non-secure callable function to update
+  24:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *                                        the variable SystemCoreClock and return
+  25:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *                                        its value to the non-secure calling 
+  26:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *                                        application. It must be called whenever
+  27:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *                                        the core clock is changed during program
+  28:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *                                        execution.
+  29:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 2
+
+
+  30:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *   After each device reset the MSI (4 MHz) is used as system clock source.
+  31:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *   Then SystemInit() function is called, in "startup_stm32l5xx.s" file, to
+  32:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *   configure the system clock before to branch to main program.
+  33:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+  34:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *   This file insures the system clock as follows:
+  35:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *=============================================================================
+  36:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  37:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        System Clock source                    | MSI
+  38:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  39:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        SYSCLK(Hz)                             | 4000000
+  40:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  41:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        HCLK(Hz)                               | 4000000
+  42:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  43:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        AHB Prescaler                          | 1
+  44:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  45:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        APB1 Prescaler                         | 1
+  46:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  47:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        APB2 Prescaler                         | 1
+  48:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  49:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLL_SRC                                | No clock
+  50:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  51:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLL_M                                  | 1
+  52:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  53:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLL_N                                  | 8
+  54:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  55:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLL_P                                  | 7
+  56:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  57:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLL_Q                                  | 2
+  58:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  59:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLL_R                                  | 2
+  60:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  61:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLLSAI1_SRC                            | NA
+  62:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  63:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLLSAI1_M                              | NA
+  64:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  65:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLLSAI1_N                              | NA
+  66:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  67:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLLSAI1_P                              | NA
+  68:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  69:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLLSAI1_Q                              | NA
+  70:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  71:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLLSAI1_R                              | NA
+  72:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  73:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLLSAI2_SRC                            | NA
+  74:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  75:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLLSAI2_M                              | NA
+  76:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  77:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLLSAI2_N                              | NA
+  78:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  79:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        PLLSAI2_P                              | NA
+  80:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  81:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        Require 48MHz for USB FS,              | Disabled
+  82:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *        SDIO and RNG clock                     |
+  83:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *-----------------------------------------------------------------------------
+  84:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *=============================================================================
+  85:../../Secure/Core/Src/system_stm32l5xx_s.c ****   ******************************************************************************
+  86:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @attention
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 3
+
+
+  87:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+  88:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * Copyright (c) 2019 STMicroelectronics.
+  89:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * All rights reserved.
+  90:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+  91:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  92:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * in the root directory of this software component.
+  93:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  94:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+  95:../../Secure/Core/Src/system_stm32l5xx_s.c ****   ******************************************************************************
+  96:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+  97:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+  98:../../Secure/Core/Src/system_stm32l5xx_s.c **** /** @addtogroup CMSIS
+  99:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @{
+ 100:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 101:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 102:../../Secure/Core/Src/system_stm32l5xx_s.c **** /** @addtogroup STM32L5xx_System
+ 103:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @{
+ 104:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 105:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 106:../../Secure/Core/Src/system_stm32l5xx_s.c **** /** @addtogroup STM32L5xx_System_Private_Includes
+ 107:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @{
+ 108:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 109:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 110:../../Secure/Core/Src/system_stm32l5xx_s.c **** #include "stm32l5xx.h"
+ 111:../../Secure/Core/Src/system_stm32l5xx_s.c **** #include "partition_stm32l5xx.h"  /* Trustzone-M core secure attributes */
+ 112:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 113:../../Secure/Core/Src/system_stm32l5xx_s.c **** /**
+ 114:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @}
+ 115:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 116:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 117:../../Secure/Core/Src/system_stm32l5xx_s.c **** /** @addtogroup STM32L5xx_System_Private_TypesDefinitions
+ 118:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @{
+ 119:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 120:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 121:../../Secure/Core/Src/system_stm32l5xx_s.c **** #if defined ( __ICCARM__ )
+ 122:../../Secure/Core/Src/system_stm32l5xx_s.c **** #  define CMSE_NS_ENTRY __cmse_nonsecure_entry
+ 123:../../Secure/Core/Src/system_stm32l5xx_s.c **** #else
+ 124:../../Secure/Core/Src/system_stm32l5xx_s.c **** #  define CMSE_NS_ENTRY __attribute((cmse_nonsecure_entry))
+ 125:../../Secure/Core/Src/system_stm32l5xx_s.c **** #endif
+ 126:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 127:../../Secure/Core/Src/system_stm32l5xx_s.c **** /**
+ 128:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @}
+ 129:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 130:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 131:../../Secure/Core/Src/system_stm32l5xx_s.c **** /** @addtogroup STM32L5xx_System_Private_Defines
+ 132:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @{
+ 133:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 134:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 135:../../Secure/Core/Src/system_stm32l5xx_s.c **** #if !defined  (HSE_VALUE)
+ 136:../../Secure/Core/Src/system_stm32l5xx_s.c ****   #define HSE_VALUE    16000000U /*!< Value of the External oscillator in Hz */
+ 137:../../Secure/Core/Src/system_stm32l5xx_s.c **** #endif /* HSE_VALUE */
+ 138:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 139:../../Secure/Core/Src/system_stm32l5xx_s.c **** #if !defined  (MSI_VALUE)
+ 140:../../Secure/Core/Src/system_stm32l5xx_s.c ****   #define MSI_VALUE    4000000U  /*!< Value of the Internal oscillator in Hz*/
+ 141:../../Secure/Core/Src/system_stm32l5xx_s.c **** #endif /* MSI_VALUE */
+ 142:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 143:../../Secure/Core/Src/system_stm32l5xx_s.c **** #if !defined  (HSI_VALUE)
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 4
+
+
+ 144:../../Secure/Core/Src/system_stm32l5xx_s.c ****   #define HSI_VALUE    16000000U /*!< Value of the Internal oscillator in Hz*/
+ 145:../../Secure/Core/Src/system_stm32l5xx_s.c **** #endif /* HSI_VALUE */
+ 146:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 147:../../Secure/Core/Src/system_stm32l5xx_s.c **** /* Note: Following vector table addresses must be defined in line with linker
+ 148:../../Secure/Core/Src/system_stm32l5xx_s.c ****          configuration. */
+ 149:../../Secure/Core/Src/system_stm32l5xx_s.c **** /*!< Uncomment the following line if you need to relocate the vector table
+ 150:../../Secure/Core/Src/system_stm32l5xx_s.c ****      anywhere in Flash or Sram, else the vector table is kept at the automatic
+ 151:../../Secure/Core/Src/system_stm32l5xx_s.c ****      remap of boot address selected */
+ 152:../../Secure/Core/Src/system_stm32l5xx_s.c **** /* #define USER_VECT_TAB_ADDRESS */
+ 153:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 154:../../Secure/Core/Src/system_stm32l5xx_s.c **** #if defined(USER_VECT_TAB_ADDRESS)
+ 155:../../Secure/Core/Src/system_stm32l5xx_s.c **** /*!< Uncomment the following line if you need to relocate your vector Table
+ 156:../../Secure/Core/Src/system_stm32l5xx_s.c ****      in Sram else user remap will be done in Flash. */
+ 157:../../Secure/Core/Src/system_stm32l5xx_s.c **** /* #define VECT_TAB_SRAM */
+ 158:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 159:../../Secure/Core/Src/system_stm32l5xx_s.c **** #if defined(VECT_TAB_SRAM)
+ 160:../../Secure/Core/Src/system_stm32l5xx_s.c **** #define VECT_TAB_BASE_ADDRESS   SRAM1_BASE_S    /*!< Vector Table base address field.
+ 161:../../Secure/Core/Src/system_stm32l5xx_s.c ****                                                      This value must be a multiple of 0x200. */
+ 162:../../Secure/Core/Src/system_stm32l5xx_s.c **** #define VECT_TAB_OFFSET         0x00000000U     /*!< Vector Table base offset field.
+ 163:../../Secure/Core/Src/system_stm32l5xx_s.c ****                                                      This value must be a multiple of 0x200. */
+ 164:../../Secure/Core/Src/system_stm32l5xx_s.c **** #else
+ 165:../../Secure/Core/Src/system_stm32l5xx_s.c **** #define VECT_TAB_BASE_ADDRESS   FLASH_BASE_S    /*!< Vector Table base address field.
+ 166:../../Secure/Core/Src/system_stm32l5xx_s.c ****                                                      This value must be a multiple of 0x200. */
+ 167:../../Secure/Core/Src/system_stm32l5xx_s.c **** #define VECT_TAB_OFFSET         0x00000000U     /*!< Vector Table base offset field.
+ 168:../../Secure/Core/Src/system_stm32l5xx_s.c ****                                                      This value must be a multiple of 0x200. */
+ 169:../../Secure/Core/Src/system_stm32l5xx_s.c **** #endif /* VECT_TAB_SRAM */
+ 170:../../Secure/Core/Src/system_stm32l5xx_s.c **** #endif /* USER_VECT_TAB_ADDRESS */
+ 171:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 172:../../Secure/Core/Src/system_stm32l5xx_s.c **** /******************************************************************************/
+ 173:../../Secure/Core/Src/system_stm32l5xx_s.c **** /**
+ 174:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @}
+ 175:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 176:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 177:../../Secure/Core/Src/system_stm32l5xx_s.c **** /** @addtogroup STM32L5xx_System_Private_Macros
+ 178:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @{
+ 179:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 180:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 181:../../Secure/Core/Src/system_stm32l5xx_s.c **** /**
+ 182:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @}
+ 183:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 184:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 185:../../Secure/Core/Src/system_stm32l5xx_s.c **** /** @addtogroup STM32L5xx_System_Private_Variables
+ 186:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @{
+ 187:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 188:../../Secure/Core/Src/system_stm32l5xx_s.c ****   /* The SystemCoreClock variable is updated in three ways:
+ 189:../../Secure/Core/Src/system_stm32l5xx_s.c ****       1) by calling CMSIS function SystemCoreClockUpdate()
+ 190:../../Secure/Core/Src/system_stm32l5xx_s.c ****       2) by calling HAL API function HAL_RCC_GetHCLKFreq()
+ 191:../../Secure/Core/Src/system_stm32l5xx_s.c ****       3) each time HAL_RCC_ClockConfig() is called to configure the system clock frequency
+ 192:../../Secure/Core/Src/system_stm32l5xx_s.c ****          Note: If you use this function to configure the system clock; then there
+ 193:../../Secure/Core/Src/system_stm32l5xx_s.c ****                is no need to call the 2 first functions listed above, since SystemCoreClock
+ 194:../../Secure/Core/Src/system_stm32l5xx_s.c ****                variable is updated automatically.
+ 195:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 196:../../Secure/Core/Src/system_stm32l5xx_s.c ****   uint32_t SystemCoreClock = 4000000U;
+ 197:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 198:../../Secure/Core/Src/system_stm32l5xx_s.c ****   const uint8_t  AHBPrescTable[16] = {0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 1U, 2U, 3U, 4U, 6U, 7U, 8U, 9
+ 199:../../Secure/Core/Src/system_stm32l5xx_s.c ****   const uint8_t  APBPrescTable[8] =  {0U, 0U, 0U, 0U, 1U, 2U, 3U, 4U};
+ 200:../../Secure/Core/Src/system_stm32l5xx_s.c ****   const uint32_t MSIRangeTable[16] = {100000U,   200000U,   400000U,   800000U,  1000000U,  2000000
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 5
+
+
+ 201:../../Secure/Core/Src/system_stm32l5xx_s.c ****                                       4000000U, 8000000U, 16000000U, 24000000U, 32000000U, 48000000
+ 202:../../Secure/Core/Src/system_stm32l5xx_s.c ****                                       0U,       0U,       0U,        0U};  /* MISRAC-2012: 0U for u
+ 203:../../Secure/Core/Src/system_stm32l5xx_s.c **** /**
+ 204:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @}
+ 205:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 206:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 207:../../Secure/Core/Src/system_stm32l5xx_s.c **** /** @addtogroup STM32L5xx_System_Private_FunctionPrototypes
+ 208:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @{
+ 209:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 210:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 211:../../Secure/Core/Src/system_stm32l5xx_s.c **** /**
+ 212:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @}
+ 213:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 214:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 215:../../Secure/Core/Src/system_stm32l5xx_s.c **** /** @addtogroup STM32L5xx_System_Private_Functions
+ 216:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @{
+ 217:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 218:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 219:../../Secure/Core/Src/system_stm32l5xx_s.c **** /**
+ 220:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @brief  Setup the microcontroller system.
+ 221:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @retval None
+ 222:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 223:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 224:../../Secure/Core/Src/system_stm32l5xx_s.c **** void SystemInit(void)
+ 225:../../Secure/Core/Src/system_stm32l5xx_s.c **** {
+  30              		.loc 1 225 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+ 226:../../Secure/Core/Src/system_stm32l5xx_s.c ****   /* SAU/IDAU, FPU and Interrupts secure/non-secure allocation settings */
+ 227:../../Secure/Core/Src/system_stm32l5xx_s.c ****   TZ_SAU_Setup();
+  35              		.loc 1 227 3 view .LVU1
+  36              	.LBB4:
+  37              	.LBI4:
+  38              		.file 2 "../../Secure/Core/Inc/partition_stm32l552xx.h"
+   1:../../Secure/Core/Inc/partition_stm32l552xx.h **** /* USER CODE BEGIN Header */
+   2:../../Secure/Core/Inc/partition_stm32l552xx.h **** /**
+   3:../../Secure/Core/Inc/partition_stm32l552xx.h ****   ******************************************************************************
+   4:../../Secure/Core/Inc/partition_stm32l552xx.h ****   * @file    partition_stm32l552xx.h
+   5:../../Secure/Core/Inc/partition_stm32l552xx.h ****   * @author  MCD Application Team
+   6:../../Secure/Core/Inc/partition_stm32l552xx.h ****   * @brief   CMSIS STM32L552xx Device Initial Setup for Secure / Non-Secure Zones
+   7:../../Secure/Core/Inc/partition_stm32l552xx.h ****   *          for ARMCM33 based on CMSIS CORE V5.3.1 partition_ARMCM33.h Template.
+   8:../../Secure/Core/Inc/partition_stm32l552xx.h ****   *
+   9:../../Secure/Core/Inc/partition_stm32l552xx.h ****   *          This file contains:
+  10:../../Secure/Core/Inc/partition_stm32l552xx.h ****   *           - Initialize Security Attribution Unit (SAU) CTRL register
+  11:../../Secure/Core/Inc/partition_stm32l552xx.h ****   *           - Setup behavior of Sleep and Exception Handling
+  12:../../Secure/Core/Inc/partition_stm32l552xx.h ****   *           - Setup behavior of Floating Point Unit
+  13:../../Secure/Core/Inc/partition_stm32l552xx.h ****   *           - Setup Interrupt Target
+  14:../../Secure/Core/Inc/partition_stm32l552xx.h ****   *
+  15:../../Secure/Core/Inc/partition_stm32l552xx.h ****   ******************************************************************************
+  16:../../Secure/Core/Inc/partition_stm32l552xx.h ****   * @attention
+  17:../../Secure/Core/Inc/partition_stm32l552xx.h ****   *
+  18:../../Secure/Core/Inc/partition_stm32l552xx.h ****   * Copyright (c) 2019 STMicroelectronics.
+  19:../../Secure/Core/Inc/partition_stm32l552xx.h ****   * All rights reserved.
+  20:../../Secure/Core/Inc/partition_stm32l552xx.h ****   *
+  21:../../Secure/Core/Inc/partition_stm32l552xx.h ****   * This software is licensed under terms that can be found in the LICENSE file
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 6
+
+
+  22:../../Secure/Core/Inc/partition_stm32l552xx.h ****   * in the root directory of this software component.
+  23:../../Secure/Core/Inc/partition_stm32l552xx.h ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  24:../../Secure/Core/Inc/partition_stm32l552xx.h ****   *
+  25:../../Secure/Core/Inc/partition_stm32l552xx.h ****   ******************************************************************************
+  26:../../Secure/Core/Inc/partition_stm32l552xx.h ****  */
+  27:../../Secure/Core/Inc/partition_stm32l552xx.h **** /* USER CODE END Header */
+  28:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+  29:../../Secure/Core/Inc/partition_stm32l552xx.h **** #ifndef PARTITION_STM32L552XX_H
+  30:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define PARTITION_STM32L552XX_H
+  31:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+  32:../../Secure/Core/Inc/partition_stm32l552xx.h **** //-------- <<< Use Configuration Wizard in Context Menu >>> -----------------
+  33:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+  34:../../Secure/Core/Inc/partition_stm32l552xx.h **** /* USER CODE BEGIN 0 */
+  35:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+  36:../../Secure/Core/Inc/partition_stm32l552xx.h **** // <e>Initialize Security Attribution Unit (SAU) CTRL register
+  37:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+  38:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_CTRL          1
+  39:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+  40:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+  41:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <q> Enable SAU
+  42:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Value for SAU->CTRL register bit ENABLE
+  43:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+  44:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_CTRL_ENABLE   1
+  45:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+  46:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+  47:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o> When SAU is disabled
+  48:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <0=> All Memory is Secure
+  49:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <1=> All Memory is Non-Secure
+  50:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Value for SAU->CTRL register bit ALLNS
+  51:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> When all Memory is Non-Secure (ALLNS is 1), IDAU can override memory map configuration.
+  52:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+  53:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_CTRL_ALLNS  0
+  54:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+  55:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+  56:../../Secure/Core/Inc/partition_stm32l552xx.h **** // </e>
+  57:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+  58:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+  59:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+  60:../../Secure/Core/Inc/partition_stm32l552xx.h **** // <h>Initialize Security Attribution Unit (SAU) Address Regions
+  61:../../Secure/Core/Inc/partition_stm32l552xx.h **** // <i>SAU configuration specifies regions to be one of:
+  62:../../Secure/Core/Inc/partition_stm32l552xx.h **** // <i> - Secure and Non-Secure Callable
+  63:../../Secure/Core/Inc/partition_stm32l552xx.h **** // <i> - Non-Secure
+  64:../../Secure/Core/Inc/partition_stm32l552xx.h **** // <i>Note: All memory regions not configured by SAU are Secure
+  65:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+  66:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_REGIONS_MAX   8                 /* Max. number of SAU regions */
+  67:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+  68:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+  69:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <e>Initialize SAU Region 0
+  70:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Setup SAU Region 0 memory attributes
+  71:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+  72:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_REGION0    1
+  73:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+  74:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+  75:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Start Address <0-0xFFFFFFE0>
+  76:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+  77:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_START0     0x0C03E000      /* start address of SAU region 0 */
+  78:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 7
+
+
+  79:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+  80:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>End Address <0x1F-0xFFFFFFFF>
+  81:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+  82:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_END0       0x0C03FFFF      /* end address of SAU region 0 */
+  83:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+  84:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+  85:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Region is
+  86:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <0=>Non-Secure
+  87:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <1=>Secure, Non-Secure Callable
+  88:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+  89:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_NSC0       1
+  90:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+  91:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   </e>
+  92:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+  93:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+  94:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+  95:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <e>Initialize SAU Region 1
+  96:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Setup SAU Region 1 memory attributes
+  97:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+  98:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_REGION1    1
+  99:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 100:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 101:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Start Address <0-0xFFFFFFE0>
+ 102:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 103:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_START1     0x08040000      /* start address of SAU region 1 */
+ 104:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 105:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 106:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>End Address <0x1F-0xFFFFFFFF>
+ 107:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 108:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_END1       0x0807FFFF      /* end address of SAU region 1 */
+ 109:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 110:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 111:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Region is
+ 112:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <0=>Non-Secure
+ 113:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <1=>Secure, Non-Secure Callable
+ 114:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 115:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_NSC1       0
+ 116:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 117:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   </e>
+ 118:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 119:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 120:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 121:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <e>Initialize SAU Region 2
+ 122:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Setup SAU Region 2 memory attributes
+ 123:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 124:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_REGION2    1
+ 125:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 126:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 127:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Start Address <0-0xFFFFFFE0>
+ 128:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 129:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_START2     0x20018000      /* start address of SAU region 2 */
+ 130:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 131:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 132:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>End Address <0x1F-0xFFFFFFFF>
+ 133:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 134:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_END2       0x2003FFFF      /* end address of SAU region 2 */
+ 135:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 8
+
+
+ 136:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 137:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Region is
+ 138:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <0=>Non-Secure
+ 139:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <1=>Secure, Non-Secure Callable
+ 140:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 141:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_NSC2       0
+ 142:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 143:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   </e>
+ 144:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 145:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 146:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 147:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <e>Initialize SAU Region 3
+ 148:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Setup SAU Region 3 memory attributes
+ 149:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 150:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_REGION3    1
+ 151:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 152:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 153:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Start Address <0-0xFFFFFFE0>
+ 154:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 155:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_START3     0x40000000      /* start address of SAU region 3 */
+ 156:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 157:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 158:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>End Address <0x1F-0xFFFFFFFF>
+ 159:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 160:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_END3       0x4FFFFFFF      /* end address of SAU region 3 */
+ 161:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 162:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 163:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Region is
+ 164:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <0=>Non-Secure
+ 165:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <1=>Secure, Non-Secure Callable
+ 166:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 167:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_NSC3       0
+ 168:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 169:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   </e>
+ 170:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 171:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 172:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 173:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <e>Initialize SAU Region 4
+ 174:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Setup SAU Region 4 memory attributes
+ 175:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 176:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_REGION4    1
+ 177:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 178:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 179:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Start Address <0-0xFFFFFFE0>
+ 180:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 181:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_START4     0x60000000      /* start address of SAU region 4 */
+ 182:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 183:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 184:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>End Address <0x1F-0xFFFFFFFF>
+ 185:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 186:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_END4       0x9FFFFFFF      /* end address of SAU region 4 */
+ 187:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 188:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 189:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Region is
+ 190:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <0=>Non-Secure
+ 191:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <1=>Secure, Non-Secure Callable
+ 192:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 9
+
+
+ 193:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_NSC4       0
+ 194:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 195:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   </e>
+ 196:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 197:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 198:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 199:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <e>Initialize SAU Region 5
+ 200:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Setup SAU Region 5 memory attributes
+ 201:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 202:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_REGION5    1
+ 203:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 204:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 205:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Start Address <0-0xFFFFFFE0>
+ 206:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 207:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_START5     0x0BF90000      /* start address of SAU region 5 */
+ 208:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 209:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 210:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>End Address <0x1F-0xFFFFFFFF>
+ 211:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 212:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_END5       0x0BFA8FFF      /* end address of SAU region 5 */
+ 213:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 214:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 215:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Region is
+ 216:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <0=>Non-Secure
+ 217:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <1=>Secure, Non-Secure Callable
+ 218:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 219:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_NSC5       0
+ 220:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 221:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   </e>
+ 222:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 223:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 224:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 225:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <e>Initialize SAU Region 6
+ 226:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Setup SAU Region 6 memory attributes
+ 227:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 228:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_REGION6    0
+ 229:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 230:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 231:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Start Address <0-0xFFFFFFE0>
+ 232:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 233:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_START6     0x00000000      /* start address of SAU region 6 */
+ 234:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 235:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 236:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>End Address <0x1F-0xFFFFFFFF>
+ 237:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 238:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_END6       0x00000000      /* end address of SAU region 6 */
+ 239:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 240:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 241:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Region is
+ 242:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <0=>Non-Secure
+ 243:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <1=>Secure, Non-Secure Callable
+ 244:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 245:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_NSC6       0
+ 246:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 247:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   </e>
+ 248:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 249:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 10
+
+
+ 250:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 251:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <e>Initialize SAU Region 7
+ 252:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Setup SAU Region 7 memory attributes
+ 253:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 254:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_REGION7    0
+ 255:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 256:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 257:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Start Address <0-0xFFFFFFE0>
+ 258:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 259:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_START7     0x00000000      /* start address of SAU region 7 */
+ 260:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 261:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 262:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>End Address <0x1F-0xFFFFFFFF>
+ 263:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 264:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_END7       0x00000000      /* end address of SAU region 7 */
+ 265:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 266:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 267:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <o>Region is
+ 268:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <0=>Non-Secure
+ 269:../../Secure/Core/Inc/partition_stm32l552xx.h **** //         <1=>Secure, Non-Secure Callable
+ 270:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 271:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_NSC7       0
+ 272:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 273:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   </e>
+ 274:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 275:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 276:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 277:../../Secure/Core/Inc/partition_stm32l552xx.h **** // </h>
+ 278:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 279:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 280:../../Secure/Core/Inc/partition_stm32l552xx.h **** // <e>Setup behaviour of Sleep and Exception Handling
+ 281:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 282:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SCB_CSR_AIRCR_INIT  0
+ 283:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 284:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 285:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o> Deep Sleep can be enabled by
+ 286:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <0=>Secure and Non-Secure state
+ 287:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <1=>Secure state only
+ 288:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Value for SCB->CSR register bit DEEPSLEEPS
+ 289:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 290:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SCB_CSR_DEEPSLEEPS_VAL  0
+ 291:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 292:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 293:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o>System reset request accessible from
+ 294:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <0=> Secure and Non-Secure state
+ 295:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <1=> Secure state only
+ 296:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Value for SCB->AIRCR register bit SYSRESETREQS
+ 297:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 298:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SCB_AIRCR_SYSRESETREQS_VAL  0
+ 299:../../Secure/Core/Inc/partition_stm32l552xx.h **** /* USER CODE END 0 */
+ 300:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 301:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o>Priority of Non-Secure exceptions is
+ 302:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <0=> Not altered
+ 303:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <1=> Lowered to 0x04-0x07
+ 304:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Value for SCB->AIRCR register bit PRIS
+ 305:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 306:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SCB_AIRCR_PRIS_VAL      0
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 11
+
+
+ 307:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 308:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 309:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o>BusFault, HardFault, and NMI target
+ 310:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <0=> Secure state
+ 311:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <1=> Non-Secure state
+ 312:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Value for SCB->AIRCR register bit BFHFNMINS
+ 313:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 314:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SCB_AIRCR_BFHFNMINS_VAL 0
+ 315:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 316:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 317:../../Secure/Core/Inc/partition_stm32l552xx.h **** // </e>
+ 318:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 319:../../Secure/Core/Inc/partition_stm32l552xx.h **** /* USER CODE BEGIN 1 */
+ 320:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 321:../../Secure/Core/Inc/partition_stm32l552xx.h **** // <e>Setup behaviour of Floating Point Unit
+ 322:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 323:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define TZ_FPU_NS_USAGE 1
+ 324:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 325:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 326:../../Secure/Core/Inc/partition_stm32l552xx.h **** // <o>Floating Point Unit usage
+ 327:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <0=> Secure state only
+ 328:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <3=> Secure and Non-Secure state
+ 329:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Value for SCB->NSACR register bits CP10, CP11
+ 330:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 331:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SCB_NSACR_CP10_11_VAL       3
+ 332:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 333:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 334:../../Secure/Core/Inc/partition_stm32l552xx.h **** // <o>Treat floating-point registers as Secure
+ 335:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <0=> Disabled
+ 336:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <1=> Enabled
+ 337:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Value for FPU->FPCCR register bit TS
+ 338:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 339:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define FPU_FPCCR_TS_VAL            0
+ 340:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 341:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 342:../../Secure/Core/Inc/partition_stm32l552xx.h **** // <o>Clear on return (CLRONRET) accessibility
+ 343:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <0=> Secure and Non-Secure state
+ 344:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <1=> Secure state only
+ 345:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Value for FPU->FPCCR register bit CLRONRETS
+ 346:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 347:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define FPU_FPCCR_CLRONRETS_VAL     0
+ 348:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 349:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 350:../../Secure/Core/Inc/partition_stm32l552xx.h **** // <o>Clear floating-point caller saved registers on exception return
+ 351:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <0=> Disabled
+ 352:../../Secure/Core/Inc/partition_stm32l552xx.h **** //     <1=> Enabled
+ 353:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <i> Value for FPU->FPCCR register bit CLRONRET
+ 354:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 355:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define FPU_FPCCR_CLRONRET_VAL      1
+ 356:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 357:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 358:../../Secure/Core/Inc/partition_stm32l552xx.h **** // </e>
+ 359:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 360:../../Secure/Core/Inc/partition_stm32l552xx.h **** /* USER CODE END 1 */
+ 361:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 362:../../Secure/Core/Inc/partition_stm32l552xx.h **** // <h>Setup Interrupt Target
+ 363:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 12
+
+
+ 364:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 365:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 366:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <e>Initialize ITNS 0 (Interrupts 0..31)
+ 367:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 368:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define NVIC_INIT_ITNS0    1
+ 369:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 370:../../Secure/Core/Inc/partition_stm32l552xx.h **** // Interrupts 0..31
+ 371:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.0>  WWDG_IRQn           <0=> Secure state
+ 372:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.1>  PVD_PVM_IRQn        <0=> Secure state
+ 373:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.2>  RTC_IRQn            <0=> Secure state
+ 374:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.3>  RTC_S_IRQn          <0=> Secure state
+ 375:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.4>  TAMP_IRQn           <0=> Secure state
+ 376:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.5>  TAMP_S_IRQn         <0=> Secure state
+ 377:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.6>  FLASH_IRQn          <0=> Secure state
+ 378:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.7>  FLASH_S_IRQn        <0=> Secure state
+ 379:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.8>  GTZC_IRQn           <0=> Secure state
+ 380:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.9>  RCC_IRQn            <0=> Secure state
+ 381:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.10> RCC_S_IRQn          <0=> Secure state
+ 382:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.11> EXTI0_IRQn          <0=> Secure state
+ 383:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.12> EXTI1_IRQn          <0=> Secure state
+ 384:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.13> EXTI2_IRQn          <0=> Secure state
+ 385:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.14> EXTI3_IRQn          <0=> Secure state
+ 386:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.15> EXTI4_IRQn          <0=> Secure state
+ 387:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.16> EXTI5_IRQn          <0=> Secure state
+ 388:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.17> EXTI6_IRQn          <0=> Secure state
+ 389:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.18> EXTI7_IRQn          <0=> Secure state
+ 390:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.19> EXTI8_IRQn          <0=> Secure state
+ 391:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.20> EXTI9_IRQn          <0=> Secure state
+ 392:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.21> EXTI10_IRQn         <0=> Secure state
+ 393:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.22> EXTI11_IRQn         <0=> Secure state
+ 394:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.23> EXTI12_IRQn         <0=> Secure state
+ 395:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.24> EXTI13_IRQn         <0=> Secure state
+ 396:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.25> EXTI14_IRQn         <0=> Secure state
+ 397:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.26> EXTI15_IRQn         <0=> Secure state
+ 398:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.27> DMAMUX1_IRQn        <0=> Secure state
+ 399:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.28> DMAMUX1_S_IRQn      <0=> Secure state
+ 400:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.29> DMA1_Channel1_IRQn  <0=> Secure state
+ 401:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.30> DMA1_Channel2_IRQn  <0=> Secure state
+ 402:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.31> DMA1_Channel3_IRQn  <0=> Secure state
+ 403:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 404:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 405:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define NVIC_INIT_ITNS0_VAL      0x00000000
+ 406:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 407:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   </e>
+ 408:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 409:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 410:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 411:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <e>Initialize ITNS 1 (Interrupts 32..63)
+ 412:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 413:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define NVIC_INIT_ITNS1    1
+ 414:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 415:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 416:../../Secure/Core/Inc/partition_stm32l552xx.h **** / Interrupts 32..63
+ 417:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.0>  DMA1_Channel4_IRQn  <0=> Secure state
+ 418:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.1>  DMA1_Channel5_IRQn  <0=> Secure state
+ 419:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.2>  DMA1_Channel6_IRQn  <0=> Secure state
+ 420:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.3>  DMA1_Channel7_IRQn  <0=> Secure state
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 13
+
+
+ 421:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.4>  DMA1_Channel8_IRQn  <0=> Secure state
+ 422:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.5>  ADC1_2_IRQn   	<0=> Secure state
+ 423:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.6>  DAC_IRQn            <0=> Secure state
+ 424:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.7>  FDCAN1_IT0_IRQn     <0=> Secure state
+ 425:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.8>  FDCAN1_IT1_IRQn     <0=> Secure state
+ 426:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.9>  TIM1_BRK_IRQn       <0=> Secure state
+ 427:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.10> TIM1_UP_IRQn        <0=> Secure state
+ 428:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.11> TIM1_TRG_COM_IRQn   <0=> Secure state
+ 429:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.12> TIM1_CC_IRQn        <0=> Secure state
+ 430:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.13> TIM2_IRQn           <0=> Secure state
+ 431:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.14> TIM3_IRQn           <0=> Secure state
+ 432:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.15> TIM4_IRQn           <0=> Secure state
+ 433:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.16> TIM5_IRQn           <0=> Secure state
+ 434:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.17> TIM6_IRQn           <0=> Secure state
+ 435:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.18> TIM7_IRQn           <0=> Secure state
+ 436:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.19> TIM8_BRK_IRQn       <0=> Secure state
+ 437:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.20> TIM8_UP_IRQn        <0=> Secure state
+ 438:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.21> TIM8_TRG_COM_IRQn   <0=> Secure state
+ 439:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.22> TIM8_CC_IRQn        <0=> Secure state
+ 440:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.23> I2C1_EV_IRQn        <0=> Secure state
+ 441:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.24> I2C1_ER_IRQn        <0=> Secure state
+ 442:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.25> I2C2_EV_IRQn        <0=> Secure state
+ 443:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.26> I2C2_ER_IRQn        <0=> Secure state
+ 444:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.27> SPI1_IRQn           <0=> Secure state
+ 445:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.28> SPI2_IRQn           <0=> Secure state
+ 446:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.29> USART1_IRQn         <0=> Secure state
+ 447:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.30> USART2_IRQn         <0=> Secure state
+ 448:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.31> USART3_IRQn         <0=> Secure state
+ 449:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 450:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 451:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define NVIC_INIT_ITNS1_VAL      0x00000000
+ 452:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 453:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 454:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   </e>
+ 455:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 456:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 457:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 458:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <e>Initialize ITNS 2 (Interrupts 64..95)
+ 459:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 460:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define NVIC_INIT_ITNS2    1
+ 461:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 462:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 463:../../Secure/Core/Inc/partition_stm32l552xx.h **** // Interrupts 64..95
+ 464:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.0>  UART4_IRQn          <0=> Secure state
+ 465:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.1>  UART5_IRQn          <0=> Secure state
+ 466:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.2>  LPUART1_IRQn        <0=> Secure state
+ 467:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.3>  LPTIM1_IRQn         <0=> Secure state
+ 468:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.4>  LPTIM2_IRQn         <0=> Secure state
+ 469:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.5>  TIM15_IRQn          <0=> Secure state
+ 470:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.6>  TIM16_IRQn          <0=> Secure state
+ 471:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.7>  TIM17_IRQn          <0=> Secure state
+ 472:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.8>  COMP_IRQn           <0=> Secure state
+ 473:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.9>  USB_FS_IRQn         <0=> Secure state
+ 474:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.10> CRS_IRQn            <0=> Secure state
+ 475:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.11> FMC_IRQn            <0=> Secure state
+ 476:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.12> OCTOSPI1_IRQn       <0=> Secure state
+ 477:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.13> Reserved            <0=> Secure state
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 14
+
+
+ 478:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.14> SDMMC1_IRQn         <0=> Secure state
+ 479:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.15> Reserved            <0=> Secure state
+ 480:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.16> DMA2_Channel1_IRQn  <0=> Secure state
+ 481:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.17> DMA2_Channel2_IRQn  <0=> Secure state
+ 482:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.18> DMA2_Channel3_IRQn  <0=> Secure state
+ 483:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.19> DMA2_Channel4_IRQn  <0=> Secure state
+ 484:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.20> DMA2_Channel5_IRQn  <0=> Secure state
+ 485:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.21> DMA2_Channel6_IRQn  <0=> Secure state
+ 486:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.22> DMA2_Channel7_IRQn  <0=> Secure state
+ 487:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.23> DMA2_Channel8_IRQn  <0=> Secure state
+ 488:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.24> I2C3_EV_IRQn        <0=> Secure state
+ 489:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.25> I2C3_ER_IRQn        <0=> Secure state
+ 490:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.26> SAI1_IRQn           <0=> Secure state
+ 491:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.27> SAI2_IRQn           <0=> Secure state
+ 492:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.28> TSC_IRQn            <0=> Secure state
+ 493:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.30> RNG_IRQn            <0=> Secure state
+ 494:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.31> FPU_IRQn            <0=> Secure state
+ 495:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 496:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 497:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define NVIC_INIT_ITNS2_VAL      0x00000000
+ 498:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 499:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 500:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   </e>
+ 501:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 502:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 503:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 504:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <e>Initialize ITNS 3 (Interrupts 96..108)
+ 505:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 506:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define NVIC_INIT_ITNS3    1
+ 507:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 508:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 509:../../Secure/Core/Inc/partition_stm32l552xx.h **** // Interrupts 96..108
+ 510:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.0>  HASH_IRQn           <0=> Secure state
+ 511:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.2>  LPTIM3_IRQn         <0=> Secure state
+ 512:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.3>  SPI3_IRQn           <0=> Secure state
+ 513:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.4>  I2C4_EV_IRQn        <0=> Secure state
+ 514:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.5>  I2C4_ER_IRQn        <0=> Secure state
+ 515:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.6>  DFSDM1_FLT0_IRQn    <0=> Secure state
+ 516:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.7>  DFSDM1_FLT1_IRQn    <0=> Secure state
+ 517:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.8>  DFSDM1_FLT2_IRQn    <0=> Secure state
+ 518:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.9>  DFSDM1_FLT3_IRQn    <0=> Secure state
+ 519:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.10> UCPD1_IRQn          <0=> Secure state
+ 520:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.11> ICACHE_IRQn         <0=> Secure state
+ 521:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   <o.12> OTFDEC1_IRQn        <0=> Secure state
+ 522:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 523:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 524:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define NVIC_INIT_ITNS3_VAL      0x00000000
+ 525:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 526:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 527:../../Secure/Core/Inc/partition_stm32l552xx.h **** //   </e>
+ 528:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 529:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 530:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 531:../../Secure/Core/Inc/partition_stm32l552xx.h **** // </h>
+ 532:../../Secure/Core/Inc/partition_stm32l552xx.h **** */
+ 533:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 534:../../Secure/Core/Inc/partition_stm32l552xx.h **** /* USER CODE BEGIN 2 */
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 15
+
+
+ 535:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 536:../../Secure/Core/Inc/partition_stm32l552xx.h **** /*
+ 537:../../Secure/Core/Inc/partition_stm32l552xx.h ****     max 8 SAU regions.
+ 538:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SAU regions are defined in partition.h
+ 539:../../Secure/Core/Inc/partition_stm32l552xx.h ****  */
+ 540:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 541:../../Secure/Core/Inc/partition_stm32l552xx.h **** #define SAU_INIT_REGION(n) \
+ 542:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SAU->RNR  =  (n                                     & SAU_RNR_REGION_Msk); \
+ 543:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SAU->RBAR =  (SAU_INIT_START##n                     & SAU_RBAR_BADDR_Msk); \
+ 544:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SAU->RLAR =  (SAU_INIT_END##n                       & SAU_RLAR_LADDR_Msk) | \
+ 545:../../Secure/Core/Inc/partition_stm32l552xx.h ****                 ((SAU_INIT_NSC##n << SAU_RLAR_NSC_Pos)  & SAU_RLAR_NSC_Msk)   | 1U
+ 546:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 547:../../Secure/Core/Inc/partition_stm32l552xx.h **** /**
+ 548:../../Secure/Core/Inc/partition_stm32l552xx.h ****   \brief   Setup a SAU Region
+ 549:../../Secure/Core/Inc/partition_stm32l552xx.h ****   \details Writes the region information contained in SAU_Region to the
+ 550:../../Secure/Core/Inc/partition_stm32l552xx.h ****            registers SAU_RNR, SAU_RBAR, and SAU_RLAR
+ 551:../../Secure/Core/Inc/partition_stm32l552xx.h ****  */
+ 552:../../Secure/Core/Inc/partition_stm32l552xx.h **** __STATIC_INLINE void TZ_SAU_Setup (void)
+  39              		.loc 2 552 22 view .LVU2
+  40              	.LBB5:
+ 553:../../Secure/Core/Inc/partition_stm32l552xx.h **** {
+ 554:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 555:../../Secure/Core/Inc/partition_stm32l552xx.h **** #if defined (__SAUREGION_PRESENT) && (__SAUREGION_PRESENT == 1U)
+ 556:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 557:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (SAU_INIT_REGION0) && (SAU_INIT_REGION0 == 1U)
+ 558:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SAU_INIT_REGION(0);
+  41              		.loc 2 558 5 view .LVU3
+  42 0000 344B     		ldr	r3, .L2
+  43 0002 0022     		movs	r2, #0
+  44 0004 C3F8D820 		str	r2, [r3, #216]
+  45              		.loc 2 558 5 view .LVU4
+  46 0008 3349     		ldr	r1, .L2+4
+  47 000a C3F8DC10 		str	r1, [r3, #220]
+  48              		.loc 2 558 5 view .LVU5
+  49 000e 01F5FF51 		add	r1, r1, #8160
+  50 0012 0331     		adds	r1, r1, #3
+  51 0014 C3F8E010 		str	r1, [r3, #224]
+ 559:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif
+ 560:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 561:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (SAU_INIT_REGION1) && (SAU_INIT_REGION1 == 1U)
+ 562:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SAU_INIT_REGION(1);
+  52              		.loc 2 562 5 view .LVU6
+  53 0018 0121     		movs	r1, #1
+  54 001a C3F8D810 		str	r1, [r3, #216]
+  55              		.loc 2 562 5 view .LVU7
+  56 001e 2F48     		ldr	r0, .L2+8
+  57 0020 C3F8DC00 		str	r0, [r3, #220]
+  58              		.loc 2 562 5 view .LVU8
+  59 0024 00F57F30 		add	r0, r0, #261120
+  60 0028 00F2E130 		addw	r0, r0, #993
+  61 002c C3F8E000 		str	r0, [r3, #224]
+ 563:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif
+ 564:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 565:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (SAU_INIT_REGION2) && (SAU_INIT_REGION2 == 1U)
+ 566:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SAU_INIT_REGION(2);
+  62              		.loc 2 566 5 view .LVU9
+  63 0030 0220     		movs	r0, #2
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 16
+
+
+  64 0032 C3F8D800 		str	r0, [r3, #216]
+  65              		.loc 2 566 5 view .LVU10
+  66 0036 2A48     		ldr	r0, .L2+12
+  67 0038 C3F8DC00 		str	r0, [r3, #220]
+  68              		.loc 2 566 5 view .LVU11
+  69 003c 00F51F30 		add	r0, r0, #162816
+  70 0040 00F2E130 		addw	r0, r0, #993
+  71 0044 C3F8E000 		str	r0, [r3, #224]
+ 567:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif
+ 568:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 569:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (SAU_INIT_REGION3) && (SAU_INIT_REGION3 == 1U)
+ 570:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SAU_INIT_REGION(3);
+  72              		.loc 2 570 5 view .LVU12
+  73 0048 0320     		movs	r0, #3
+  74 004a C3F8D800 		str	r0, [r3, #216]
+  75              		.loc 2 570 5 view .LVU13
+  76 004e 4FF08040 		mov	r0, #1073741824
+  77 0052 C3F8DC00 		str	r0, [r3, #220]
+  78              		.loc 2 570 5 view .LVU14
+  79 0056 2348     		ldr	r0, .L2+16
+  80 0058 C3F8E000 		str	r0, [r3, #224]
+ 571:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif
+ 572:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 573:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (SAU_INIT_REGION4) && (SAU_INIT_REGION4 == 1U)
+ 574:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SAU_INIT_REGION(4);
+  81              		.loc 2 574 5 view .LVU15
+  82 005c 0420     		movs	r0, #4
+  83 005e C3F8D800 		str	r0, [r3, #216]
+  84              		.loc 2 574 5 view .LVU16
+  85 0062 4FF0C040 		mov	r0, #1610612736
+  86 0066 C3F8DC00 		str	r0, [r3, #220]
+  87              		.loc 2 574 5 view .LVU17
+  88 006a 1F48     		ldr	r0, .L2+20
+  89 006c C3F8E000 		str	r0, [r3, #224]
+ 575:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif
+ 576:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 577:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (SAU_INIT_REGION5) && (SAU_INIT_REGION5 == 1U)
+ 578:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SAU_INIT_REGION(5);
+  90              		.loc 2 578 5 view .LVU18
+  91 0070 0520     		movs	r0, #5
+  92 0072 C3F8D800 		str	r0, [r3, #216]
+  93              		.loc 2 578 5 view .LVU19
+  94 0076 1D48     		ldr	r0, .L2+24
+  95 0078 C3F8DC00 		str	r0, [r3, #220]
+  96              		.loc 2 578 5 view .LVU20
+  97 007c 00F5C730 		add	r0, r0, #101888
+  98 0080 00F2E110 		addw	r0, r0, #481
+  99 0084 C3F8E000 		str	r0, [r3, #224]
+ 579:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif
+ 580:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 581:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (SAU_INIT_REGION6) && (SAU_INIT_REGION6 == 1U)
+ 582:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SAU_INIT_REGION(6);
+ 583:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif
+ 584:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 585:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (SAU_INIT_REGION7) && (SAU_INIT_REGION7 == 1U)
+ 586:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SAU_INIT_REGION(7);
+ 587:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 17
+
+
+ 588:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 589:../../Secure/Core/Inc/partition_stm32l552xx.h ****   /* repeat this for all possible SAU regions */
+ 590:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 591:../../Secure/Core/Inc/partition_stm32l552xx.h **** #endif /* defined (__SAUREGION_PRESENT) && (__SAUREGION_PRESENT == 1U) */
+ 592:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 593:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (SAU_INIT_CTRL) && (SAU_INIT_CTRL == 1U)
+ 594:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SAU->CTRL = ((SAU_INIT_CTRL_ENABLE << SAU_CTRL_ENABLE_Pos) & SAU_CTRL_ENABLE_Msk) |
+ 100              		.loc 2 594 5 view .LVU21
+ 101              		.loc 2 594 15 is_stmt 0 view .LVU22
+ 102 0088 C3F8D010 		str	r1, [r3, #208]
+ 595:../../Secure/Core/Inc/partition_stm32l552xx.h ****                 ((SAU_INIT_CTRL_ALLNS  << SAU_CTRL_ALLNS_Pos)  & SAU_CTRL_ALLNS_Msk)   ;
+ 596:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif
+ 597:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 598:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (SCB_CSR_AIRCR_INIT) && (SCB_CSR_AIRCR_INIT == 1U)
+ 599:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SCB->SCR   = (SCB->SCR   & ~(SCB_SCR_SLEEPDEEPS_Msk    )) |
+ 600:../../Secure/Core/Inc/partition_stm32l552xx.h ****                    ((SCB_CSR_DEEPSLEEPS_VAL     << SCB_SCR_SLEEPDEEPS_Pos)     & SCB_SCR_SLEEPDEEPS
+ 601:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 602:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SCB->AIRCR = (SCB->AIRCR & ~(SCB_AIRCR_VECTKEY_Msk   | SCB_AIRCR_SYSRESETREQS_Msk |
+ 603:../../Secure/Core/Inc/partition_stm32l552xx.h ****                                  SCB_AIRCR_BFHFNMINS_Msk | SCB_AIRCR_PRIS_Msk)        )            
+ 604:../../Secure/Core/Inc/partition_stm32l552xx.h ****                    ((0x05FAU                    << SCB_AIRCR_VECTKEY_Pos)      & SCB_AIRCR_VECTKEY_
+ 605:../../Secure/Core/Inc/partition_stm32l552xx.h ****                    ((SCB_AIRCR_SYSRESETREQS_VAL << SCB_AIRCR_SYSRESETREQS_Pos) & SCB_AIRCR_SYSRESET
+ 606:../../Secure/Core/Inc/partition_stm32l552xx.h ****                    ((SCB_AIRCR_PRIS_VAL         << SCB_AIRCR_PRIS_Pos)         & SCB_AIRCR_PRIS_Msk
+ 607:../../Secure/Core/Inc/partition_stm32l552xx.h ****                    ((SCB_AIRCR_BFHFNMINS_VAL    << SCB_AIRCR_BFHFNMINS_Pos)    & SCB_AIRCR_BFHFNMIN
+ 608:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif /* defined (SCB_CSR_AIRCR_INIT) && (SCB_CSR_AIRCR_INIT == 1U) */
+ 609:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 610:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (__FPU_USED) && (__FPU_USED == 1U) && \
+ 611:../../Secure/Core/Inc/partition_stm32l552xx.h ****       defined (TZ_FPU_NS_USAGE) && (TZ_FPU_NS_USAGE == 1U)
+ 612:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 613:../../Secure/Core/Inc/partition_stm32l552xx.h ****     SCB->NSACR = (SCB->NSACR & ~(SCB_NSACR_CP10_Msk | SCB_NSACR_CP11_Msk)) |
+ 103              		.loc 2 613 5 is_stmt 1 view .LVU23
+ 104              		.loc 2 613 22 is_stmt 0 view .LVU24
+ 105 008c D3F88C10 		ldr	r1, [r3, #140]
+ 106              		.loc 2 613 76 view .LVU25
+ 107 0090 41F44061 		orr	r1, r1, #3072
+ 108              		.loc 2 613 16 view .LVU26
+ 109 0094 C3F88C10 		str	r1, [r3, #140]
+ 614:../../Secure/Core/Inc/partition_stm32l552xx.h ****                    ((SCB_NSACR_CP10_11_VAL << SCB_NSACR_CP10_Pos) & (SCB_NSACR_CP10_Msk | SCB_NSACR
+ 615:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 616:../../Secure/Core/Inc/partition_stm32l552xx.h ****     FPU->FPCCR = (FPU->FPCCR & ~(FPU_FPCCR_TS_Msk | FPU_FPCCR_CLRONRETS_Msk | FPU_FPCCR_CLRONRET_Ms
+ 110              		.loc 2 616 5 is_stmt 1 view .LVU27
+ 111              		.loc 2 616 22 is_stmt 0 view .LVU28
+ 112 0098 1548     		ldr	r0, .L2+28
+ 113 009a 416B     		ldr	r1, [r0, #52]
+ 617:../../Secure/Core/Inc/partition_stm32l552xx.h ****                    ((FPU_FPCCR_TS_VAL        << FPU_FPCCR_TS_Pos       ) & FPU_FPCCR_TS_Msk       )
+ 114              		.loc 2 617 101 view .LVU29
+ 115 009c 21F0E051 		bic	r1, r1, #469762048
+ 618:../../Secure/Core/Inc/partition_stm32l552xx.h ****                    ((FPU_FPCCR_CLRONRETS_VAL << FPU_FPCCR_CLRONRETS_Pos) & FPU_FPCCR_CLRONRETS_Msk)
+ 116              		.loc 2 618 101 view .LVU30
+ 117 00a0 41F08051 		orr	r1, r1, #268435456
+ 616:../../Secure/Core/Inc/partition_stm32l552xx.h ****                    ((FPU_FPCCR_TS_VAL        << FPU_FPCCR_TS_Pos       ) & FPU_FPCCR_TS_Msk       )
+ 118              		.loc 2 616 16 view .LVU31
+ 119 00a4 4163     		str	r1, [r0, #52]
+ 619:../../Secure/Core/Inc/partition_stm32l552xx.h ****                    ((FPU_FPCCR_CLRONRET_VAL  << FPU_FPCCR_CLRONRET_Pos ) & FPU_FPCCR_CLRONRET_Msk )
+ 620:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif
+ 621:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 622:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (NVIC_INIT_ITNS0) && (NVIC_INIT_ITNS0 == 1U)
+ 623:../../Secure/Core/Inc/partition_stm32l552xx.h ****     NVIC->ITNS[0] = NVIC_INIT_ITNS0_VAL;
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 18
+
+
+ 120              		.loc 2 623 5 is_stmt 1 view .LVU32
+ 121              		.loc 2 623 19 is_stmt 0 view .LVU33
+ 122 00a6 1349     		ldr	r1, .L2+32
+ 123 00a8 C1F88022 		str	r2, [r1, #640]
+ 624:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif
+ 625:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 626:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (NVIC_INIT_ITNS1) && (NVIC_INIT_ITNS1 == 1U)
+ 627:../../Secure/Core/Inc/partition_stm32l552xx.h ****     NVIC->ITNS[1] = NVIC_INIT_ITNS1_VAL;
+ 124              		.loc 2 627 5 is_stmt 1 view .LVU34
+ 125              		.loc 2 627 19 is_stmt 0 view .LVU35
+ 126 00ac C1F88422 		str	r2, [r1, #644]
+ 628:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif
+ 629:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 630:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (NVIC_INIT_ITNS2) && (NVIC_INIT_ITNS2 == 1U)
+ 631:../../Secure/Core/Inc/partition_stm32l552xx.h ****     NVIC->ITNS[2] = NVIC_INIT_ITNS2_VAL;
+ 127              		.loc 2 631 5 is_stmt 1 view .LVU36
+ 128              		.loc 2 631 19 is_stmt 0 view .LVU37
+ 129 00b0 C1F88822 		str	r2, [r1, #648]
+ 632:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #endif
+ 633:../../Secure/Core/Inc/partition_stm32l552xx.h **** 
+ 634:../../Secure/Core/Inc/partition_stm32l552xx.h ****   #if defined (NVIC_INIT_ITNS3) && (NVIC_INIT_ITNS3 == 1U)
+ 635:../../Secure/Core/Inc/partition_stm32l552xx.h ****     NVIC->ITNS[3] = NVIC_INIT_ITNS3_VAL;
+ 130              		.loc 2 635 5 is_stmt 1 view .LVU38
+ 131              		.loc 2 635 19 is_stmt 0 view .LVU39
+ 132 00b4 C1F88C22 		str	r2, [r1, #652]
+ 133              	.LBE5:
+ 134              	.LBE4:
+ 228:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 229:../../Secure/Core/Src/system_stm32l5xx_s.c ****   /* Configure the Vector Table location -------------------------------------*/
+ 230:../../Secure/Core/Src/system_stm32l5xx_s.c **** #if defined(USER_VECT_TAB_ADDRESS)
+ 231:../../Secure/Core/Src/system_stm32l5xx_s.c ****   SCB->VTOR = VECT_TAB_BASE_ADDRESS | VECT_TAB_OFFSET;
+ 232:../../Secure/Core/Src/system_stm32l5xx_s.c **** #endif
+ 233:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 234:../../Secure/Core/Src/system_stm32l5xx_s.c ****   /* FPU settings ------------------------------------------------------------*/
+ 235:../../Secure/Core/Src/system_stm32l5xx_s.c **** #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+ 236:../../Secure/Core/Src/system_stm32l5xx_s.c ****   SCB->CPACR |= ((3UL << 20U)|(3UL << 22U));  /* set CP10 and CP11 Full Access */
+ 135              		.loc 1 236 3 is_stmt 1 view .LVU40
+ 136              		.loc 1 236 14 is_stmt 0 view .LVU41
+ 137 00b8 D3F88820 		ldr	r2, [r3, #136]
+ 138 00bc 42F47002 		orr	r2, r2, #15728640
+ 139 00c0 C3F88820 		str	r2, [r3, #136]
+ 237:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 238:../../Secure/Core/Src/system_stm32l5xx_s.c ****   SCB_NS->CPACR |= ((3UL << 20U)|(3UL << 22U));  /* set CP10 and CP11 Full Access */
+ 140              		.loc 1 238 3 is_stmt 1 view .LVU42
+ 141              		.loc 1 238 17 is_stmt 0 view .LVU43
+ 142 00c4 0C4A     		ldr	r2, .L2+36
+ 143 00c6 D2F88830 		ldr	r3, [r2, #136]
+ 144 00ca 43F47003 		orr	r3, r3, #15728640
+ 145 00ce C2F88830 		str	r3, [r2, #136]
+ 239:../../Secure/Core/Src/system_stm32l5xx_s.c **** #endif
+ 240:../../Secure/Core/Src/system_stm32l5xx_s.c **** }
+ 146              		.loc 1 240 1 view .LVU44
+ 147 00d2 7047     		bx	lr
+ 148              	.L3:
+ 149              		.align	2
+ 150              	.L2:
+ 151 00d4 00ED00E0 		.word	-536810240
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 19
+
+
+ 152 00d8 00E0030C 		.word	201580544
+ 153 00dc 00000408 		.word	134479872
+ 154 00e0 00800120 		.word	536969216
+ 155 00e4 E1FFFF4F 		.word	1342177249
+ 156 00e8 E1FFFF9F 		.word	-1610612767
+ 157 00ec 0000F90B 		.word	200867840
+ 158 00f0 00EF00E0 		.word	-536809728
+ 159 00f4 00E100E0 		.word	-536813312
+ 160 00f8 00ED02E0 		.word	-536679168
+ 161              		.cfi_endproc
+ 162              	.LFE203:
+ 164              		.section	.text.SystemCoreClockUpdate,"ax",%progbits
+ 165              		.align	1
+ 166              		.global	SystemCoreClockUpdate
+ 167              		.syntax unified
+ 168              		.thumb
+ 169              		.thumb_func
+ 170              		.fpu fpv4-sp-d16
+ 172              	SystemCoreClockUpdate:
+ 173              	.LFB204:
+ 241:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 242:../../Secure/Core/Src/system_stm32l5xx_s.c **** /**
+ 243:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @brief  Update SystemCoreClock variable according to Clock Register Values.
+ 244:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         The SystemCoreClock variable contains the core clock (HCLK), it can
+ 245:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         be used by the user application to setup the SysTick timer or configure
+ 246:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         other parameters.
+ 247:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+ 248:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @note   Depending on secure or non-secure compilation, the adequate RCC peripheral
+ 249:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         memory are is accessed thanks to RCC alias defined in stm32l5xxxx.h device file
+ 250:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         so either from RCC_S peripheral register mapped memory in secure or from
+ 251:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         RCC_NS peripheral register mapped memory in non-secure.
+ 252:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+ 253:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @note   Each time the core clock (HCLK) changes, this function must be called
+ 254:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         to update SystemCoreClock variable value. Otherwise, any configuration
+ 255:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         based on this variable will be incorrect.
+ 256:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+ 257:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @note   - The system frequency computed by this function is not the real
+ 258:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *           frequency in the chip. It is calculated based on the predefined
+ 259:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *           constant and the selected clock source:
+ 260:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+ 261:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *           - If SYSCLK source is MSI, SystemCoreClock will contain the MSI_VALUE(*)
+ 262:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+ 263:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *           - If SYSCLK source is HSI, SystemCoreClock will contain the HSI_VALUE(**)
+ 264:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+ 265:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *           - If SYSCLK source is HSE, SystemCoreClock will contain the HSE_VALUE(***)
+ 266:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+ 267:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *           - If SYSCLK source is PLL, SystemCoreClock will contain the HSE_VALUE(***)
+ 268:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *             or HSI_VALUE(*) or MSI_VALUE(*) multiplied/divided by the PLL factors.
+ 269:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+ 270:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         (*) MSI_VALUE is a constant defined in stm32l5xx_hal.h file (default value
+ 271:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *             4 MHz) but the real value may vary depending on the variations
+ 272:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *             in voltage and temperature.
+ 273:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+ 274:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         (**) HSI_VALUE is a constant defined in stm32l5xx_hal.h file (default value
+ 275:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *              16 MHz) but the real value may vary depending on the variations
+ 276:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *              in voltage and temperature.
+ 277:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 20
+
+
+ 278:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         (***) HSE_VALUE is a constant defined in stm32l5xx_hal.h file (default value
+ 279:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *              8 MHz), user has to ensure that HSE_VALUE is same as the real
+ 280:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *              frequency of the crystal used. Otherwise, this function may
+ 281:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *              have wrong result.
+ 282:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+ 283:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         - The result of this function could be not correct when using fractional
+ 284:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *           value for HSE crystal.
+ 285:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *
+ 286:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @retval None
+ 287:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 288:../../Secure/Core/Src/system_stm32l5xx_s.c **** void SystemCoreClockUpdate(void)
+ 289:../../Secure/Core/Src/system_stm32l5xx_s.c **** {
+ 174              		.loc 1 289 1 is_stmt 1 view -0
+ 175              		.cfi_startproc
+ 176              		@ args = 0, pretend = 0, frame = 0
+ 177              		@ frame_needed = 0, uses_anonymous_args = 0
+ 178              		@ link register save eliminated.
+ 290:../../Secure/Core/Src/system_stm32l5xx_s.c ****   uint32_t tmp, msirange, pllvco, pllsource, pllm, pllr;
+ 179              		.loc 1 290 3 view .LVU46
+ 291:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 292:../../Secure/Core/Src/system_stm32l5xx_s.c ****   /* Get MSI Range frequency--------------------------------------------------*/
+ 293:../../Secure/Core/Src/system_stm32l5xx_s.c ****   if((RCC->CR & RCC_CR_MSIRGSEL) == 0U)
+ 180              		.loc 1 293 3 view .LVU47
+ 181              		.loc 1 293 10 is_stmt 0 view .LVU48
+ 182 0000 2F4B     		ldr	r3, .L19
+ 183 0002 1B68     		ldr	r3, [r3]
+ 184              		.loc 1 293 5 view .LVU49
+ 185 0004 13F0080F 		tst	r3, #8
+ 186 0008 16D1     		bne	.L5
+ 294:../../Secure/Core/Src/system_stm32l5xx_s.c ****   { /* MSISRANGE from RCC_CSR applies */
+ 295:../../Secure/Core/Src/system_stm32l5xx_s.c ****     msirange = (RCC->CSR & RCC_CSR_MSISRANGE) >> 8U;
+ 187              		.loc 1 295 5 is_stmt 1 view .LVU50
+ 188              		.loc 1 295 20 is_stmt 0 view .LVU51
+ 189 000a 2D4B     		ldr	r3, .L19
+ 190 000c D3F89430 		ldr	r3, [r3, #148]
+ 191              		.loc 1 295 14 view .LVU52
+ 192 0010 C3F30323 		ubfx	r3, r3, #8, #4
+ 193              	.LVL0:
+ 194              	.L6:
+ 296:../../Secure/Core/Src/system_stm32l5xx_s.c ****   }
+ 297:../../Secure/Core/Src/system_stm32l5xx_s.c ****   else
+ 298:../../Secure/Core/Src/system_stm32l5xx_s.c ****   { /* MSIRANGE from RCC_CR applies */
+ 299:../../Secure/Core/Src/system_stm32l5xx_s.c ****     msirange = (RCC->CR & RCC_CR_MSIRANGE) >> 4U;
+ 300:../../Secure/Core/Src/system_stm32l5xx_s.c ****   }
+ 301:../../Secure/Core/Src/system_stm32l5xx_s.c ****   /*MSI frequency range in HZ*/
+ 302:../../Secure/Core/Src/system_stm32l5xx_s.c ****   msirange = MSIRangeTable[msirange];
+ 195              		.loc 1 302 3 is_stmt 1 view .LVU53
+ 196              		.loc 1 302 12 is_stmt 0 view .LVU54
+ 197 0014 2B4A     		ldr	r2, .L19+4
+ 198 0016 52F82320 		ldr	r2, [r2, r3, lsl #2]
+ 199              	.LVL1:
+ 303:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 304:../../Secure/Core/Src/system_stm32l5xx_s.c ****   /* Get SYSCLK source -------------------------------------------------------*/
+ 305:../../Secure/Core/Src/system_stm32l5xx_s.c ****   switch (RCC->CFGR & RCC_CFGR_SWS)
+ 200              		.loc 1 305 3 is_stmt 1 view .LVU55
+ 201              		.loc 1 305 14 is_stmt 0 view .LVU56
+ 202 001a 294B     		ldr	r3, .L19
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 21
+
+
+ 203 001c 9B68     		ldr	r3, [r3, #8]
+ 204              		.loc 1 305 21 view .LVU57
+ 205 001e 03F00C03 		and	r3, r3, #12
+ 206              		.loc 1 305 3 view .LVU58
+ 207 0022 0C2B     		cmp	r3, #12
+ 208 0024 48D8     		bhi	.L7
+ 209 0026 DFE803F0 		tbb	[pc, r3]
+ 210              	.L9:
+ 211 002a 0C       		.byte	(.L12-.L9)/2
+ 212 002b 47       		.byte	(.L7-.L9)/2
+ 213 002c 47       		.byte	(.L7-.L9)/2
+ 214 002d 47       		.byte	(.L7-.L9)/2
+ 215 002e 0F       		.byte	(.L11-.L9)/2
+ 216 002f 47       		.byte	(.L7-.L9)/2
+ 217 0030 47       		.byte	(.L7-.L9)/2
+ 218 0031 47       		.byte	(.L7-.L9)/2
+ 219 0032 13       		.byte	(.L10-.L9)/2
+ 220 0033 47       		.byte	(.L7-.L9)/2
+ 221 0034 47       		.byte	(.L7-.L9)/2
+ 222 0035 47       		.byte	(.L7-.L9)/2
+ 223 0036 17       		.byte	(.L8-.L9)/2
+ 224              	.LVL2:
+ 225 0037 00       		.p2align 1
+ 226              	.L5:
+ 299:../../Secure/Core/Src/system_stm32l5xx_s.c ****   }
+ 227              		.loc 1 299 5 is_stmt 1 view .LVU59
+ 299:../../Secure/Core/Src/system_stm32l5xx_s.c ****   }
+ 228              		.loc 1 299 20 is_stmt 0 view .LVU60
+ 229 0038 214B     		ldr	r3, .L19
+ 230 003a 1B68     		ldr	r3, [r3]
+ 299:../../Secure/Core/Src/system_stm32l5xx_s.c ****   }
+ 231              		.loc 1 299 14 view .LVU61
+ 232 003c C3F30313 		ubfx	r3, r3, #4, #4
+ 233              	.LVL3:
+ 299:../../Secure/Core/Src/system_stm32l5xx_s.c ****   }
+ 234              		.loc 1 299 14 view .LVU62
+ 235 0040 E8E7     		b	.L6
+ 236              	.LVL4:
+ 237              	.L12:
+ 306:../../Secure/Core/Src/system_stm32l5xx_s.c ****   {
+ 307:../../Secure/Core/Src/system_stm32l5xx_s.c ****     case 0x00:  /* MSI used as system clock source */
+ 308:../../Secure/Core/Src/system_stm32l5xx_s.c ****       SystemCoreClock = msirange;
+ 238              		.loc 1 308 7 is_stmt 1 view .LVU63
+ 239              		.loc 1 308 23 is_stmt 0 view .LVU64
+ 240 0042 214B     		ldr	r3, .L19+8
+ 241 0044 1A60     		str	r2, [r3]
+ 309:../../Secure/Core/Src/system_stm32l5xx_s.c ****       break;
+ 242              		.loc 1 309 7 is_stmt 1 view .LVU65
+ 243 0046 28E0     		b	.L13
+ 244              	.L11:
+ 310:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 311:../../Secure/Core/Src/system_stm32l5xx_s.c ****     case 0x04:  /* HSI used as system clock source */
+ 312:../../Secure/Core/Src/system_stm32l5xx_s.c ****       SystemCoreClock = HSI_VALUE;
+ 245              		.loc 1 312 7 view .LVU66
+ 246              		.loc 1 312 23 is_stmt 0 view .LVU67
+ 247 0048 1F4B     		ldr	r3, .L19+8
+ 248 004a 204A     		ldr	r2, .L19+12
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 22
+
+
+ 249              	.LVL5:
+ 250              		.loc 1 312 23 view .LVU68
+ 251 004c 1A60     		str	r2, [r3]
+ 313:../../Secure/Core/Src/system_stm32l5xx_s.c ****       break;
+ 252              		.loc 1 313 7 is_stmt 1 view .LVU69
+ 253 004e 24E0     		b	.L13
+ 254              	.LVL6:
+ 255              	.L10:
+ 314:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 315:../../Secure/Core/Src/system_stm32l5xx_s.c ****     case 0x08:  /* HSE used as system clock source */
+ 316:../../Secure/Core/Src/system_stm32l5xx_s.c ****       SystemCoreClock = HSE_VALUE;
+ 256              		.loc 1 316 7 view .LVU70
+ 257              		.loc 1 316 23 is_stmt 0 view .LVU71
+ 258 0050 1D4B     		ldr	r3, .L19+8
+ 259 0052 1F4A     		ldr	r2, .L19+16
+ 260              	.LVL7:
+ 261              		.loc 1 316 23 view .LVU72
+ 262 0054 1A60     		str	r2, [r3]
+ 317:../../Secure/Core/Src/system_stm32l5xx_s.c ****       break;
+ 263              		.loc 1 317 7 is_stmt 1 view .LVU73
+ 264 0056 20E0     		b	.L13
+ 265              	.LVL8:
+ 266              	.L8:
+ 318:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 319:../../Secure/Core/Src/system_stm32l5xx_s.c ****     case 0x0C:  /* PLL used as system clock  source */
+ 320:../../Secure/Core/Src/system_stm32l5xx_s.c ****       /* PLL_VCO = (HSE_VALUE or HSI_VALUE or MSI_VALUE/ PLLM) * PLLN
+ 321:../../Secure/Core/Src/system_stm32l5xx_s.c ****          SYSCLK = PLL_VCO / PLLR
+ 322:../../Secure/Core/Src/system_stm32l5xx_s.c ****          */
+ 323:../../Secure/Core/Src/system_stm32l5xx_s.c ****       pllsource = (RCC->PLLCFGR & RCC_PLLCFGR_PLLSRC);
+ 267              		.loc 1 323 7 view .LVU74
+ 268              		.loc 1 323 23 is_stmt 0 view .LVU75
+ 269 0058 194B     		ldr	r3, .L19
+ 270 005a D968     		ldr	r1, [r3, #12]
+ 271              		.loc 1 323 17 view .LVU76
+ 272 005c 01F00301 		and	r1, r1, #3
+ 273              	.LVL9:
+ 324:../../Secure/Core/Src/system_stm32l5xx_s.c ****       pllm = ((RCC->PLLCFGR & RCC_PLLCFGR_PLLM) >> 4U) + 1U ;
+ 274              		.loc 1 324 7 is_stmt 1 view .LVU77
+ 275              		.loc 1 324 19 is_stmt 0 view .LVU78
+ 276 0060 DB68     		ldr	r3, [r3, #12]
+ 277              		.loc 1 324 49 view .LVU79
+ 278 0062 C3F30313 		ubfx	r3, r3, #4, #4
+ 279              		.loc 1 324 12 view .LVU80
+ 280 0066 0133     		adds	r3, r3, #1
+ 281              	.LVL10:
+ 325:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 326:../../Secure/Core/Src/system_stm32l5xx_s.c ****       switch (pllsource)
+ 282              		.loc 1 326 7 is_stmt 1 view .LVU81
+ 283 0068 0229     		cmp	r1, #2
+ 284 006a 04D0     		beq	.L14
+ 285 006c 0329     		cmp	r1, #3
+ 286 006e 1FD0     		beq	.L15
+ 327:../../Secure/Core/Src/system_stm32l5xx_s.c ****       {
+ 328:../../Secure/Core/Src/system_stm32l5xx_s.c ****         case 0x02:  /* HSI used as PLL clock source */
+ 329:../../Secure/Core/Src/system_stm32l5xx_s.c ****           pllvco = (HSI_VALUE / pllm);
+ 330:../../Secure/Core/Src/system_stm32l5xx_s.c ****           break;
+ 331:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 23
+
+
+ 332:../../Secure/Core/Src/system_stm32l5xx_s.c ****         case 0x03:  /* HSE used as PLL clock source */
+ 333:../../Secure/Core/Src/system_stm32l5xx_s.c ****           pllvco = (HSE_VALUE / pllm);
+ 334:../../Secure/Core/Src/system_stm32l5xx_s.c ****           break;
+ 335:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 336:../../Secure/Core/Src/system_stm32l5xx_s.c ****         default:    /* MSI used as PLL clock source */
+ 337:../../Secure/Core/Src/system_stm32l5xx_s.c ****           pllvco = (msirange / pllm);
+ 287              		.loc 1 337 11 view .LVU82
+ 288              		.loc 1 337 18 is_stmt 0 view .LVU83
+ 289 0070 B2FBF3F2 		udiv	r2, r2, r3
+ 290              	.LVL11:
+ 338:../../Secure/Core/Src/system_stm32l5xx_s.c ****           break;
+ 291              		.loc 1 338 11 is_stmt 1 view .LVU84
+ 292 0074 02E0     		b	.L17
+ 293              	.LVL12:
+ 294              	.L14:
+ 329:../../Secure/Core/Src/system_stm32l5xx_s.c ****           break;
+ 295              		.loc 1 329 11 view .LVU85
+ 329:../../Secure/Core/Src/system_stm32l5xx_s.c ****           break;
+ 296              		.loc 1 329 18 is_stmt 0 view .LVU86
+ 297 0076 154A     		ldr	r2, .L19+12
+ 298              	.LVL13:
+ 329:../../Secure/Core/Src/system_stm32l5xx_s.c ****           break;
+ 299              		.loc 1 329 18 view .LVU87
+ 300 0078 B2FBF3F2 		udiv	r2, r2, r3
+ 301              	.LVL14:
+ 330:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 302              		.loc 1 330 11 is_stmt 1 view .LVU88
+ 303              	.L17:
+ 339:../../Secure/Core/Src/system_stm32l5xx_s.c ****       }
+ 340:../../Secure/Core/Src/system_stm32l5xx_s.c ****       pllvco = pllvco * ((RCC->PLLCFGR & RCC_PLLCFGR_PLLN) >> 8U);
+ 304              		.loc 1 340 7 view .LVU89
+ 305              		.loc 1 340 30 is_stmt 0 view .LVU90
+ 306 007c 1049     		ldr	r1, .L19
+ 307              	.LVL15:
+ 308              		.loc 1 340 30 view .LVU91
+ 309 007e CB68     		ldr	r3, [r1, #12]
+ 310              	.LVL16:
+ 311              		.loc 1 340 60 view .LVU92
+ 312 0080 C3F30623 		ubfx	r3, r3, #8, #7
+ 313              		.loc 1 340 14 view .LVU93
+ 314 0084 02FB03F3 		mul	r3, r2, r3
+ 315              	.LVL17:
+ 341:../../Secure/Core/Src/system_stm32l5xx_s.c ****       pllr = (((RCC->PLLCFGR & RCC_PLLCFGR_PLLR) >> 25U) + 1U) * 2U;
+ 316              		.loc 1 341 7 is_stmt 1 view .LVU94
+ 317              		.loc 1 341 20 is_stmt 0 view .LVU95
+ 318 0088 CA68     		ldr	r2, [r1, #12]
+ 319              		.loc 1 341 50 view .LVU96
+ 320 008a C2F34162 		ubfx	r2, r2, #25, #2
+ 321              		.loc 1 341 58 view .LVU97
+ 322 008e 0132     		adds	r2, r2, #1
+ 323              		.loc 1 341 12 view .LVU98
+ 324 0090 5200     		lsls	r2, r2, #1
+ 325              	.LVL18:
+ 342:../../Secure/Core/Src/system_stm32l5xx_s.c ****       SystemCoreClock = pllvco/pllr;
+ 326              		.loc 1 342 7 is_stmt 1 view .LVU99
+ 327              		.loc 1 342 31 is_stmt 0 view .LVU100
+ 328 0092 B3FBF2F3 		udiv	r3, r3, r2
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 24
+
+
+ 329              	.LVL19:
+ 330              		.loc 1 342 23 view .LVU101
+ 331 0096 0C4A     		ldr	r2, .L19+8
+ 332              	.LVL20:
+ 333              		.loc 1 342 23 view .LVU102
+ 334 0098 1360     		str	r3, [r2]
+ 343:../../Secure/Core/Src/system_stm32l5xx_s.c ****       break;
+ 335              		.loc 1 343 7 is_stmt 1 view .LVU103
+ 336              	.L13:
+ 344:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 345:../../Secure/Core/Src/system_stm32l5xx_s.c ****     default:
+ 346:../../Secure/Core/Src/system_stm32l5xx_s.c ****       SystemCoreClock = msirange;
+ 347:../../Secure/Core/Src/system_stm32l5xx_s.c ****       break;
+ 348:../../Secure/Core/Src/system_stm32l5xx_s.c ****   }
+ 349:../../Secure/Core/Src/system_stm32l5xx_s.c ****   /* Compute HCLK clock frequency --------------------------------------------*/
+ 350:../../Secure/Core/Src/system_stm32l5xx_s.c ****   /* Get HCLK prescaler */
+ 351:../../Secure/Core/Src/system_stm32l5xx_s.c ****   tmp = AHBPrescTable[((RCC->CFGR & RCC_CFGR_HPRE) >> 4U)];
+ 337              		.loc 1 351 3 view .LVU104
+ 338              		.loc 1 351 28 is_stmt 0 view .LVU105
+ 339 009a 094B     		ldr	r3, .L19
+ 340 009c 9B68     		ldr	r3, [r3, #8]
+ 341              		.loc 1 351 52 view .LVU106
+ 342 009e C3F30313 		ubfx	r3, r3, #4, #4
+ 343              		.loc 1 351 22 view .LVU107
+ 344 00a2 0C4A     		ldr	r2, .L19+20
+ 345 00a4 D15C     		ldrb	r1, [r2, r3]	@ zero_extendqisi2
+ 346              	.LVL21:
+ 352:../../Secure/Core/Src/system_stm32l5xx_s.c ****   /* HCLK clock frequency */
+ 353:../../Secure/Core/Src/system_stm32l5xx_s.c ****   SystemCoreClock >>= tmp;
+ 347              		.loc 1 353 3 is_stmt 1 view .LVU108
+ 348              		.loc 1 353 19 is_stmt 0 view .LVU109
+ 349 00a6 084A     		ldr	r2, .L19+8
+ 350 00a8 1368     		ldr	r3, [r2]
+ 351 00aa CB40     		lsrs	r3, r3, r1
+ 352 00ac 1360     		str	r3, [r2]
+ 354:../../Secure/Core/Src/system_stm32l5xx_s.c **** }
+ 353              		.loc 1 354 1 view .LVU110
+ 354 00ae 7047     		bx	lr
+ 355              	.LVL22:
+ 356              	.L15:
+ 333:../../Secure/Core/Src/system_stm32l5xx_s.c ****           break;
+ 357              		.loc 1 333 11 is_stmt 1 view .LVU111
+ 333:../../Secure/Core/Src/system_stm32l5xx_s.c ****           break;
+ 358              		.loc 1 333 18 is_stmt 0 view .LVU112
+ 359 00b0 074A     		ldr	r2, .L19+16
+ 360              	.LVL23:
+ 333:../../Secure/Core/Src/system_stm32l5xx_s.c ****           break;
+ 361              		.loc 1 333 18 view .LVU113
+ 362 00b2 B2FBF3F2 		udiv	r2, r2, r3
+ 363              	.LVL24:
+ 334:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 364              		.loc 1 334 11 is_stmt 1 view .LVU114
+ 365 00b6 E1E7     		b	.L17
+ 366              	.LVL25:
+ 367              	.L7:
+ 346:../../Secure/Core/Src/system_stm32l5xx_s.c ****       break;
+ 368              		.loc 1 346 7 view .LVU115
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 25
+
+
+ 346:../../Secure/Core/Src/system_stm32l5xx_s.c ****       break;
+ 369              		.loc 1 346 23 is_stmt 0 view .LVU116
+ 370 00b8 034B     		ldr	r3, .L19+8
+ 371 00ba 1A60     		str	r2, [r3]
+ 347:../../Secure/Core/Src/system_stm32l5xx_s.c ****   }
+ 372              		.loc 1 347 7 is_stmt 1 view .LVU117
+ 373 00bc EDE7     		b	.L13
+ 374              	.L20:
+ 375 00be 00BF     		.align	2
+ 376              	.L19:
+ 377 00c0 00100250 		.word	1342312448
+ 378 00c4 00000000 		.word	.LANCHOR0
+ 379 00c8 00000000 		.word	.LANCHOR1
+ 380 00cc 0024F400 		.word	16000000
+ 381 00d0 00127A00 		.word	8000000
+ 382 00d4 00000000 		.word	.LANCHOR2
+ 383              		.cfi_endproc
+ 384              	.LFE204:
+ 386              		.section	.text.SECURE_SystemCoreClockUpdate,"ax",%progbits
+ 387              		.align	1
+ 388              		.global	SECURE_SystemCoreClockUpdate
+ 389              		.global	__acle_se_SECURE_SystemCoreClockUpdate
+ 390              		.syntax unified
+ 391              		.thumb
+ 392              		.thumb_func
+ 393              		.fpu fpv4-sp-d16
+ 395              		.syntax unified
+ 396              		.thumb
+ 397              		.thumb_func
+ 398              		.fpu fpv4-sp-d16
+ 400              	SECURE_SystemCoreClockUpdate:
+ 401              	__acle_se_SECURE_SystemCoreClockUpdate:
+ 402              	.LFB205:
+ 355:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 356:../../Secure/Core/Src/system_stm32l5xx_s.c **** 
+ 357:../../Secure/Core/Src/system_stm32l5xx_s.c **** /**
+ 358:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @brief  Secure Non-Secure-Callable function to return the current
+ 359:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         SystemCoreClock value after SystemCoreClock update.
+ 360:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         The SystemCoreClock variable contains the core clock (HCLK), it can
+ 361:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         be used by the user application to setup the SysTick timer or configure
+ 362:../../Secure/Core/Src/system_stm32l5xx_s.c ****   *         other parameters.
+ 363:../../Secure/Core/Src/system_stm32l5xx_s.c ****   * @retval SystemCoreClock value (HCLK)
+ 364:../../Secure/Core/Src/system_stm32l5xx_s.c ****   */
+ 365:../../Secure/Core/Src/system_stm32l5xx_s.c **** CMSE_NS_ENTRY uint32_t SECURE_SystemCoreClockUpdate(void)
+ 366:../../Secure/Core/Src/system_stm32l5xx_s.c **** {
+ 403              		.loc 1 366 1 view -0
+ 404              		.cfi_startproc
+ 405              		@ Non-secure entry function: called from non-secure code.
+ 406              		@ args = 0, pretend = 0, frame = 0
+ 407              		@ frame_needed = 0, uses_anonymous_args = 0
+ 408 0000 08B5     		push	{r3, lr}
+ 409              	.LCFI0:
+ 410              		.cfi_def_cfa_offset 8
+ 411              		.cfi_offset 3, -8
+ 412              		.cfi_offset 14, -4
+ 367:../../Secure/Core/Src/system_stm32l5xx_s.c ****   SystemCoreClockUpdate();
+ 413              		.loc 1 367 3 view .LVU119
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 26
+
+
+ 414 0002 FFF7FEFF 		bl	SystemCoreClockUpdate
+ 415              	.LVL26:
+ 368:../../Secure/Core/Src/system_stm32l5xx_s.c ****   
+ 369:../../Secure/Core/Src/system_stm32l5xx_s.c ****   return SystemCoreClock;
+ 416              		.loc 1 369 3 view .LVU120
+ 370:../../Secure/Core/Src/system_stm32l5xx_s.c **** }
+ 417              		.loc 1 370 1 is_stmt 0 view .LVU121
+ 418 0006 1B4B     		ldr	r3, .L23
+ 419 0008 1868     		ldr	r0, [r3]
+ 420 000a BDE80840 		pop	{r3, lr}
+ 421              	.LCFI1:
+ 422              		.cfi_restore 14
+ 423              		.cfi_restore 3
+ 424              		.cfi_def_cfa_offset 0
+ 425 000e 7146     		mov	r1, lr
+ 426 0010 7246     		mov	r2, lr
+ 427 0012 7346     		mov	r3, lr
+ 428 0014 B7EE000A 		vmov.f32	s0, #1.0e+0
+ 429 0018 F7EE000A 		vmov.f32	s1, #1.0e+0
+ 430 001c B7EE001A 		vmov.f32	s2, #1.0e+0
+ 431 0020 F7EE001A 		vmov.f32	s3, #1.0e+0
+ 432 0024 B7EE002A 		vmov.f32	s4, #1.0e+0
+ 433 0028 F7EE002A 		vmov.f32	s5, #1.0e+0
+ 434 002c B7EE003A 		vmov.f32	s6, #1.0e+0
+ 435 0030 F7EE003A 		vmov.f32	s7, #1.0e+0
+ 436 0034 B7EE004A 		vmov.f32	s8, #1.0e+0
+ 437 0038 F7EE004A 		vmov.f32	s9, #1.0e+0
+ 438 003c B7EE005A 		vmov.f32	s10, #1.0e+0
+ 439 0040 F7EE005A 		vmov.f32	s11, #1.0e+0
+ 440 0044 B7EE006A 		vmov.f32	s12, #1.0e+0
+ 441 0048 F7EE006A 		vmov.f32	s13, #1.0e+0
+ 442 004c B7EE007A 		vmov.f32	s14, #1.0e+0
+ 443 0050 F7EE007A 		vmov.f32	s15, #1.0e+0
+ 444 0054 8EF3008C 		msr	APSR_nzcvqg, lr
+ 445 0058 10B4     		push	{r4}
+ 446 005a F1EE10CA 		vmrs	ip, fpscr
+ 447 005e 4FF66074 		movw	r4, #65376
+ 448 0062 C0F6FF74 		movt	r4, #4095
+ 449 0066 0CEA040C 		and	ip, r4
+ 450 006a E1EE10CA 		vmsr	fpscr, ip
+ 451 006e 10BC     		pop	{r4}
+ 452 0070 F446     		mov	ip, lr
+ 453 0072 7447     		bxns	lr
+ 454              	.L24:
+ 455              		.align	2
+ 456              	.L23:
+ 457 0074 00000000 		.word	.LANCHOR1
+ 458              		.cfi_endproc
+ 459              	.LFE205:
+ 461              		.global	MSIRangeTable
+ 462              		.global	APBPrescTable
+ 463              		.global	AHBPrescTable
+ 464              		.global	SystemCoreClock
+ 465              		.section	.data.SystemCoreClock,"aw"
+ 466              		.align	2
+ 467              		.set	.LANCHOR1,. + 0
+ 470              	SystemCoreClock:
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 27
+
+
+ 471 0000 00093D00 		.word	4000000
+ 472              		.section	.rodata.AHBPrescTable,"a"
+ 473              		.align	2
+ 474              		.set	.LANCHOR2,. + 0
+ 477              	AHBPrescTable:
+ 478 0000 00000000 		.ascii	"\000\000\000\000\000\000\000\000\001\002\003\004\006"
+ 478      00000000 
+ 478      01020304 
+ 478      06
+ 479 000d 070809   		.ascii	"\007\010\011"
+ 480              		.section	.rodata.APBPrescTable,"a"
+ 481              		.align	2
+ 484              	APBPrescTable:
+ 485 0000 00000000 		.ascii	"\000\000\000\000\001\002\003\004"
+ 485      01020304 
+ 486              		.section	.rodata.MSIRangeTable,"a"
+ 487              		.align	2
+ 488              		.set	.LANCHOR0,. + 0
+ 491              	MSIRangeTable:
+ 492 0000 A0860100 		.word	100000
+ 493 0004 400D0300 		.word	200000
+ 494 0008 801A0600 		.word	400000
+ 495 000c 00350C00 		.word	800000
+ 496 0010 40420F00 		.word	1000000
+ 497 0014 80841E00 		.word	2000000
+ 498 0018 00093D00 		.word	4000000
+ 499 001c 00127A00 		.word	8000000
+ 500 0020 0024F400 		.word	16000000
+ 501 0024 00366E01 		.word	24000000
+ 502 0028 0048E801 		.word	32000000
+ 503 002c 006CDC02 		.word	48000000
+ 504 0030 00000000 		.word	0
+ 505 0034 00000000 		.word	0
+ 506 0038 00000000 		.word	0
+ 507 003c 00000000 		.word	0
+ 508              		.text
+ 509              	.Letext0:
+ 510              		.file 3 "c:\\opt\\toolchains\\gcc-arm-10.3-2021.07-mingw-w64-i686-arm-none-eabi\\gcc-arm-10.3-2021
+ 511              		.file 4 "c:\\opt\\toolchains\\gcc-arm-10.3-2021.07-mingw-w64-i686-arm-none-eabi\\gcc-arm-10.3-2021
+ 512              		.file 5 "../../Drivers/CMSIS/Include/core_cm33.h"
+ 513              		.file 6 "../../Drivers/CMSIS/Device/ST/STM32L5xx/Include/system_stm32l5xx.h"
+ 514              		.file 7 "../../Drivers/CMSIS/Device/ST/STM32L5xx/Include/stm32l552xx.h"
+ARM GAS  C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s 			page 28
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 system_stm32l5xx_s.c
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:18     .text.SystemInit:00000000 $t
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:27     .text.SystemInit:00000000 SystemInit
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:151    .text.SystemInit:000000d4 $d
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:165    .text.SystemCoreClockUpdate:00000000 $t
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:172    .text.SystemCoreClockUpdate:00000000 SystemCoreClockUpdate
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:211    .text.SystemCoreClockUpdate:0000002a $d
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:377    .text.SystemCoreClockUpdate:000000c0 $d
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:387    .text.SECURE_SystemCoreClockUpdate:00000000 $t
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:400    .text.SECURE_SystemCoreClockUpdate:00000000 SECURE_SystemCoreClockUpdate
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:401    .text.SECURE_SystemCoreClockUpdate:00000000 __acle_se_SECURE_SystemCoreClockUpdate
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:457    .text.SECURE_SystemCoreClockUpdate:00000074 $d
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:491    .rodata.MSIRangeTable:00000000 MSIRangeTable
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:484    .rodata.APBPrescTable:00000000 APBPrescTable
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:477    .rodata.AHBPrescTable:00000000 AHBPrescTable
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:470    .data.SystemCoreClock:00000000 SystemCoreClock
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:466    .data.SystemCoreClock:00000000 $d
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:473    .rodata.AHBPrescTable:00000000 $d
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:481    .rodata.APBPrescTable:00000000 $d
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:487    .rodata.MSIRangeTable:00000000 $d
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:225    .text.SystemCoreClockUpdate:00000037 $d
+C:\Users\carlos\AppData\Local\Temp\ccwlNMbl.s:225    .text.SystemCoreClockUpdate:00000038 $t
+
+NO UNDEFINED SYMBOLS
